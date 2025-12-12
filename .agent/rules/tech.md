@@ -1,7 +1,12 @@
-# Project: Fidcard
+---
+trigger: model_decision
+description: Tech stack
+---
 
-## Overview
-Fidcard is a mobile application built using **React Native** with **Expo**. It utilizes **Expo Router** for navigation and **NativeWind** for styling, allowing for a utility-first CSS approach similar to Tailwind CSS.
+
+The app uses **React Native** with **Expo**.
+
+It utilizes **Expo Router** for navigation and **NativeWind** for styling, allowing for a utility-first CSS approach similar to Tailwind CSS.
 
 ## Tech Stack
 - **Framework**: [Expo](https://expo.dev/) (~54.0.26)
@@ -23,15 +28,4 @@ Fidcard is a mobile application built using **React Native** with **Expo**. It u
   - `metro.config.js`: Metro bundler configuration (with NativeWind support).
   - `tsconfig.json`: TypeScript configuration.
 
-## Getting Started
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-2. **Start the development server**:
-   ```bash
-   npm run start
-   ```
-   - Press `a` for Android emulator
-   - Press `i` for iOS simulator
-   - Press `w` for Web
+
