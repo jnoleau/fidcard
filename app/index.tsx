@@ -1,4 +1,6 @@
 import { View, Text, FlatList } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 
 const CARDS = [
@@ -11,14 +13,18 @@ const CARDS = [
 ];
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
+  
   return (
-    <View className="flex-1 bg-gray-50 pt-12 px-4">
-      <View className="flex-row items-center mb-6">
-        <Ionicons name="card" size={32} color="#333" />
-        <Text className="text-3xl font-bold ml-3 text-gray-800">Mes Cartes</Text>
-      </View>
-
+    <View className="flex-1 bg-gray-50 px-4" style={{ paddingTop: insets.top }}>
+      <StatusBar style="dark" />
       <FlatList
+        ListHeaderComponent={
+          <View className="flex-row items-center mb-6 mt-2">
+            <Ionicons name="card" size={32} color="#333" />
+            <Text className="text-3xl font-bold ml-3 text-gray-800">Mes Cartes</Text>
+          </View>
+        }
         data={CARDS}
         keyExtractor={(item) => item.id}
         numColumns={2}
