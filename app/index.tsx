@@ -1,8 +1,9 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useCardStore } from '../store/useCardStore';
+import { Link } from 'expo-router';
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -23,15 +24,17 @@ export default function Index() {
         numColumns={2}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }) => (
-          <View 
-            className="w-[48%] h-32 rounded-xl p-4 justify-between mb-4 shadow-sm"
-            style={{ backgroundColor: item.color }}
-          >
-            <View className="self-end bg-white/20 p-1 rounded">
-              <Ionicons name="qr-code" size={20} color="white" />
-            </View>
-            <Text className="text-white font-bold text-lg">{item.name}</Text>
-          </View>
+          <Link href={`/edit/${item.id}`} asChild>
+            <TouchableOpacity 
+              className="w-[48%] h-32 rounded-xl p-4 justify-between mb-4 shadow-sm"
+              style={{ backgroundColor: item.color }}
+            >
+              <View className="self-end bg-white/20 p-1 rounded">
+                <Ionicons name="qr-code" size={20} color="white" />
+              </View>
+              <Text className="text-white font-bold text-lg">{item.name}</Text>
+            </TouchableOpacity>
+          </Link>
         )}
       />
     </View>
