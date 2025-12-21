@@ -3,7 +3,6 @@ trigger: model_decision
 description: Tech stack
 ---
 
-
 The app uses **React Native** with **Expo**.
 
 It utilizes **Expo Router** for navigation and **NativeWind** for styling, allowing for a utility-first CSS approach similar to Tailwind CSS.
@@ -16,6 +15,9 @@ It utilizes **Expo Router** for navigation and **NativeWind** for styling, allow
 - **Styling**: NativeWind (^4.2.1) / Tailwind CSS
 - **Icons**: @expo/vector-icons
 
+## Package Management
+- Always use `npx expo install [package]` when installing new packages to ensure compatibility with the current Expo version.
+
 ## Project Structure
 - **`app/`**: Contains the application's routes and layout (Expo Router file-based routing).
   - `_layout.tsx`: The root layout file.
@@ -27,5 +29,3 @@ It utilizes **Expo Router** for navigation and **NativeWind** for styling, allow
   - `babel.config.js`: Babel configuration (includes NativeWind preset).
   - `metro.config.js`: Metro bundler configuration (with NativeWind support).
   - `tsconfig.json`: TypeScript configuration.
-
-
