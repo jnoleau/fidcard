@@ -58,11 +58,23 @@ export default function ScanScreen() {
     console.log(
       `Bar code with type ${type} and data ${data} has been scanned!`
     );
-    // Ideally we would return this data to the previous screen or store it.
-    // For now, just log and go back.
-    if (router.canGoBack()) {
-      router.back();
-    }
+
+    // Generate a random color
+    const randomColor =
+      "#" +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, "0");
+
+    // Navigate to edit screen with params
+    // We use dismiss() to close the modal before navigating, or replace if we want to seamless transition
+    // Since scan is a modal, pushing /edit/new might stack it on top of the modal or on the root stack depending on config.
+    // Let's try pushing on top for now.
+    router.dismiss();
+    router.push({
+      pathname: "/edit/new",
+      params: { value: data, color: randomColor },
+    } as any);
   };
 
   return (

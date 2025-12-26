@@ -29,16 +29,26 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function EditCard() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const {
+    id,
+    value: initialValue,
+    color: initialColor,
+  } = useLocalSearchParams<{ id: string; value?: string; color?: string }>();
+  // ... (imports remain)
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { cards, updateCard } = useCardStore();
+  const { cards, updateCard, addCard } = useCardStore();
 
-  const card = cards.find((c) => c.id === id);
+  const isNew = id === "new";
+  const card = isNew ? null : cards.find((c) => c.id === id);
 
   const [name, setName] = useState(card?.name || "");
-  const [color, setColor] = useState(card?.color || "");
-  const [value, setValue] = useState(card?.value || "");
+  const [color, setColor] = useState(
+    card?.color || (initialColor as string) || "#ffffff"
+  );
+  const [value, setValue] = useState(
+    card?.value || (initialValue as string) || ""
+  );
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const pickerColor = useSharedValue(color || "#ffffff");
@@ -72,7 +82,8 @@ export default function EditCard() {
     }
   }, [card]);
 
-  if (!card) {
+  // Removed the "Carte non trouvée" check for 'new' case
+  if (!isNew && !card) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>Carte non trouvée</Text>
@@ -81,7 +92,16 @@ export default function EditCard() {
   }
 
   const handleSave = () => {
-    updateCard(card.id, { name, color, value });
+    if (isNew) {
+      addCard({
+        id: Date.now().toString(),
+        name,
+        color,
+        value,
+      });
+    } else {
+      updateCard(id, { name, color, value });
+    }
     router.back();
   };
 
