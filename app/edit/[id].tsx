@@ -91,7 +91,22 @@ export default function EditCard() {
     );
   }
 
+  // ... inside EditCard component ...
+  const [errors, setErrors] = useState<{ name?: string; value?: string }>({});
+
+  // ... (useEffect remains)
+
+  const validate = () => {
+    const newErrors: { name?: string; value?: string } = {};
+    if (!name.trim()) newErrors.name = "Le nom est obligatoire";
+    if (!value.trim()) newErrors.value = "La valeur est obligatoire";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = () => {
+    if (!validate()) return;
+
     if (isNew) {
       addCard({
         id: Date.now().toString(),
@@ -117,7 +132,7 @@ export default function EditCard() {
         </Text>
         <TouchableOpacity
           onPress={handleSave}
-          className="bg-blue-600 px-4 py-2 rounded-lg"
+          className={`bg-blue-600 px-4 py-2 rounded-lg ${errors.name || errors.value ? "opacity-50" : ""}`}
         >
           <Text className="text-white font-bold">Enregistrer</Text>
         </TouchableOpacity>
@@ -157,11 +172,19 @@ export default function EditCard() {
               Nom de l'enseigne
             </Text>
             <TextInput
-              className="bg-gray-50 p-4 rounded-lg border border-gray-100 "
+              className={`bg-gray-50 p-4 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-100"}`}
               value={name}
-              onChangeText={setName}
+              onChangeText={(text) => {
+                setName(text);
+                if (errors.name) setErrors({ ...errors, name: undefined });
+              }}
               placeholder="Ex: Auchan, Fnac..."
             />
+            {errors.name && (
+              <Text className="text-red-500 text-sm ml-1 mt-1">
+                {errors.name}
+              </Text>
+            )}
           </View>
 
           <View className="mt-4">
@@ -169,15 +192,24 @@ export default function EditCard() {
               Valeur (Code barre / QR Code)
             </Text>
             <TextInput
-              className="bg-gray-50 p-4 rounded-lg border border-gray-100"
+              className={`bg-gray-50 p-4 rounded-lg border ${errors.value ? "border-red-500" : "border-gray-100"}`}
               value={value}
-              onChangeText={setValue}
+              onChangeText={(text) => {
+                setValue(text);
+                if (errors.value) setErrors({ ...errors, value: undefined });
+              }}
               placeholder="Numéro de la carte..."
             />
+            {errors.value && (
+              <Text className="text-red-500 text-sm ml-1 mt-1">
+                {errors.value}
+              </Text>
+            )}
           </View>
         </View>
       </KeyboardAwareScrollView>
 
+      {/* ... (ColorPicker Modal remains) ... */}
       <Modal visible={showColorPicker} animationType="slide" transparent={true}>
         <View className="flex-1 justify-end">
           <View className="bg-white p-6 rounded-t-3xl shadow-xl">
