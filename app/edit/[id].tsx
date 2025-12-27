@@ -152,11 +152,6 @@ export default function EditCard() {
             className="w-64 h-40 rounded-2xl p-6 justify-between shadow-lg relative"
             style={[animatedCardStyle]}
           >
-            <TouchableOpacity
-              onPress={openColorPicker}
-              className="absolute top-4 left-4 w-8 h-8 rounded border-2 border-white shadow-sm z-10"
-              style={{ backgroundColor: color || "#ccc" }}
-            />
             <View className="self-end bg-white/20 p-2 rounded-lg">
               <Ionicons name="qr-code" size={32} color="white" />
             </View>
@@ -169,17 +164,26 @@ export default function EditCard() {
         <View className="space-y-6">
           <View>
             <Text className="text-sm font-medium text-gray-500 mb-2 ml-1">
-              Nom de l'enseigne
+              Enseigne
             </Text>
-            <TextInput
-              className={`bg-gray-50 p-4 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-100"}`}
-              value={name}
-              onChangeText={(text) => {
-                setName(text);
-                if (errors.name) setErrors({ ...errors, name: undefined });
-              }}
-              placeholder="Ex: Auchan, Fnac..."
-            />
+            <View
+              className={`flex-row items-center bg-gray-50 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-100"} pr-3`}
+            >
+              <TextInput
+                className="flex-1 p-4"
+                value={name}
+                onChangeText={(text) => {
+                  setName(text);
+                  if (errors.name) setErrors({ ...errors, name: undefined });
+                }}
+                placeholder="Ex: Auchan, Fnac..."
+              />
+              <TouchableOpacity
+                onPress={openColorPicker}
+                className="w-8 h-8 rounded border border-gray-200 shadow-sm ml-2"
+                style={{ backgroundColor: color || "#ffffff" }}
+              />
+            </View>
             {errors.name && (
               <Text className="text-red-500 text-sm ml-1 mt-1">
                 {errors.name}
