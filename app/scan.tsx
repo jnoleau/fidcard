@@ -14,6 +14,7 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -21,6 +22,7 @@ export default function ScanScreen() {
   const insets = useSafeAreaInsets();
   const [scanned, setScanned] = useState(false);
   const isProcessing = useRef(false);
+  const { t } = useTranslation();
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -33,17 +35,15 @@ export default function ScanScreen() {
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
         <View style={[styles.permissionContainer, { paddingTop: insets.top }]}>
-          <Text style={styles.message}>
-            We need your permission to show the camera
-          </Text>
+          <Text style={styles.message}>{t("scan.permission_request")}</Text>
           <TouchableOpacity style={styles.button} onPress={requestPermission}>
-            <Text style={styles.buttonText}>Grant Permission</Text>
+            <Text style={styles.buttonText}>{t("scan.grant_permission")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={() => router.back()}
           >
-            <Text style={styles.closeButtonText}>Cancel</Text>
+            <Text style={styles.closeButtonText}>{t("common.cancel")}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -67,9 +67,6 @@ export default function ScanScreen() {
         .padStart(6, "0");
 
     // Navigate to edit screen with params
-    // We use dismiss() to close the modal before navigating, or replace if we want to seamless transition
-    // Since scan is a modal, pushing /edit/new might stack it on top of the modal or on the root stack depending on config.
-    // Let's try pushing on top for now.
     router.dismiss();
     router.push({
       pathname: "/edit/new",
@@ -112,7 +109,7 @@ export default function ScanScreen() {
 
           <View style={styles.scanFrameContainer}>
             <View style={styles.scanFrame} />
-            <Text style={styles.scanText}>Scan a loyalty card code</Text>
+            <Text style={styles.scanText}>{t("scan.instruction")}</Text>
           </View>
         </View>
       </CameraView>

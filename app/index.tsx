@@ -4,10 +4,12 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useCardStore } from "../store/useCardStore";
 import { Link } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
   const cards = useCardStore((state) => state.cards);
+  const { t } = useTranslation();
 
   return (
     <View className="flex-1 bg-gray-50 px-4" style={{ paddingTop: insets.top }}>
@@ -17,7 +19,7 @@ export default function Index() {
           <View className="flex-row items-center mb-6 mt-2">
             <Ionicons name="card" size={32} color="#333" />
             <Text className="text-3xl font-bold ml-3 text-gray-800">
-              Mes Cartes
+              {t("home.title")}
             </Text>
           </View>
         }
@@ -36,7 +38,7 @@ export default function Index() {
                     color="#9ca3af"
                   />
                   <Text className="text-gray-400 font-medium mt-2">
-                    Ajouter
+                    {t("home.scan_card")}
                   </Text>
                 </TouchableOpacity>
               </Link>

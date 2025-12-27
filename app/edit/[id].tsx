@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Platform,
   Modal,
   StyleSheet,
 } from "react-native";
@@ -14,19 +13,12 @@ import { useCardStore } from "../../store/useCardStore";
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import ColorPicker, {
-  Panel1,
-  Swatches,
-  Preview,
-  OpacitySlider,
-  HueSlider,
-  Panel2,
-} from "reanimated-color-picker";
+import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  runOnJS,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 export default function EditCard() {
   const {
@@ -34,10 +26,10 @@ export default function EditCard() {
     value: initialValue,
     color: initialColor,
   } = useLocalSearchParams<{ id: string; value?: string; color?: string }>();
-  // ... (imports remain)
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { cards, updateCard, addCard } = useCardStore();
+  const { t } = useTranslation();
 
   const isNew = id === "new";
   const card = isNew ? null : cards.find((c) => c.id === id);
@@ -91,15 +83,12 @@ export default function EditCard() {
     );
   }
 
-  // ... inside EditCard component ...
   const [errors, setErrors] = useState<{ name?: string; value?: string }>({});
-
-  // ... (useEffect remains)
 
   const validate = () => {
     const newErrors: { name?: string; value?: string } = {};
-    if (!name.trim()) newErrors.name = "Le nom est obligatoire";
-    if (!value.trim()) newErrors.value = "La valeur est obligatoire";
+    if (!name.trim()) newErrors.name = t("edit.error_name");
+    if (!value.trim()) newErrors.value = t("edit.error_value");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -128,13 +117,13 @@ export default function EditCard() {
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-800">
-          Modifier la carte
+          {isNew ? t("edit.title_add") : t("edit.title_edit")}
         </Text>
         <TouchableOpacity
           onPress={handleSave}
           className={`bg-blue-600 px-4 py-2 rounded-lg ${errors.name || errors.value ? "opacity-50" : ""}`}
         >
-          <Text className="text-white font-bold">Enregistrer</Text>
+          <Text className="text-white font-bold">{t("common.save")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -164,7 +153,7 @@ export default function EditCard() {
         <View className="space-y-6">
           <View>
             <Text className="text-sm font-medium text-gray-500 mb-2 ml-1">
-              Enseigne
+              {t("edit.brand_label")}
             </Text>
             <View
               className={`flex-row items-center bg-gray-50 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-100"} pr-3`}
@@ -176,7 +165,7 @@ export default function EditCard() {
                   setName(text);
                   if (errors.name) setErrors({ ...errors, name: undefined });
                 }}
-                placeholder="Ex: Auchan, Fnac..."
+                placeholder={t("edit.brand_placeholder")}
               />
               <TouchableOpacity
                 onPress={openColorPicker}
@@ -193,7 +182,7 @@ export default function EditCard() {
 
           <View className="mt-4">
             <Text className="text-sm font-medium text-gray-500 mb-2 ml-1">
-              Valeur (Code barre / QR Code)
+              {t("edit.value_label")}
             </Text>
             <TextInput
               className={`bg-gray-50 p-4 rounded-lg border ${errors.value ? "border-red-500" : "border-gray-100"}`}
@@ -202,7 +191,7 @@ export default function EditCard() {
                 setValue(text);
                 if (errors.value) setErrors({ ...errors, value: undefined });
               }}
-              placeholder="Numéro de la carte..."
+              placeholder={t("edit.value_placeholder")}
             />
             {errors.value && (
               <Text className="text-red-500 text-sm ml-1 mt-1">
@@ -213,7 +202,6 @@ export default function EditCard() {
         </View>
       </KeyboardAwareScrollView>
 
-      {/* ... (ColorPicker Modal remains) ... */}
       <Modal visible={showColorPicker} animationType="slide" transparent={true}>
         <View className="flex-1 justify-end">
           <View className="bg-white p-6 rounded-t-3xl shadow-xl">
@@ -223,17 +211,21 @@ export default function EditCard() {
                 className="px-4 py-2"
               >
                 <Text className="text-red-500 font-medium text-lg">
-                  Annuler
+                  {t("common.cancel")}
                 </Text>
               </TouchableOpacity>
 
-              <Text className="text-xl font-bold text-gray-800">Couleur</Text>
+              <Text className="text-xl font-bold text-gray-800">
+                {t("edit.color_title")}
+              </Text>
 
               <TouchableOpacity
                 onPress={handleConfirmColor}
                 className="bg-blue-600 px-4 py-2 rounded-full"
               >
-                <Text className="text-white font-bold">Valider</Text>
+                <Text className="text-white font-bold">
+                  {t("common.confirm")}
+                </Text>
               </TouchableOpacity>
             </View>
 

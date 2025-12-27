@@ -1,4 +1,5 @@
 import "../global.css";
+import "../i18n";
 import { Stack } from "expo-router";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
