@@ -4,3 +4,5 @@ Not to forget to
 - les vector icons ne se montent pas tout de suite ?
 - le color picker dans un bottom sheet ?
 - le color picker a besoin d'internet ?
+- mode dark
+- améliorer le qr/bar code display condition

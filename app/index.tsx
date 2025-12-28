@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
@@ -44,14 +44,38 @@ export default function Index() {
     setIsEditing(false);
   };
 
+  const handleDelete = (card: Card) => {
+    Alert.alert(
+      t("home.delete_card_title", "Supprimer la carte"),
+      t(
+        "home.delete_card_message",
+        "Êtes-vous sûr de vouloir supprimer la carte {{name}} ?",
+        { name: card.name }
+      ),
+      [
+        {
+          text: t("common.cancel", "Annuler"),
+          style: "cancel",
+        },
+        {
+          text: t("common.delete", "Supprimer"),
+          style: "destructive",
+          onPress: () => {
+            useCardStore.getState().removeCard(card.id);
+            // Since localCards is derived from cards in useEffect when not editing,
+            // but we are editing, we must also update localCards to reflect deletion immediately
+            setLocalCards((prev) => prev.filter((c) => c.id !== card.id));
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View
-        className="flex-1 bg-gray-50 px-4"
-        style={{ paddingTop: insets.top }}
-      >
+      <View className="flex-1 bg-gray-50" style={{ paddingTop: insets.top }}>
         <StatusBar style="dark" />
-        <View className="flex-row items-center justify-between mb-6 mt-2">
+        <View className="flex-row items-center justify-between mb-6 mt-2 px-4">
           <View className="flex-row items-center">
             <Ionicons name="card" size={32} color="#333" />
             <Text className="text-3xl font-bold ml-3 text-gray-800">
@@ -71,7 +95,11 @@ export default function Index() {
         </View>
 
         <Animated.ScrollView
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{
+            paddingBottom: 100,
+            paddingHorizontal: 16,
+            paddingTop: 16,
+          }}
           showsVerticalScrollIndicator={false}
         >
           <Animated.View className="flex-row flex-wrap justify-between">
@@ -82,6 +110,7 @@ export default function Index() {
                 index={index}
                 isEditing={isEditing}
                 onReorder={handleReorder}
+                onDelete={() => handleDelete(card)}
                 onLongPress={() => setIsEditing(true)}
                 cardsCount={localCards.length}
                 isActive={activeId === card.id}

@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
-import { Dimensions, LayoutChangeEvent } from "react-native";
+import { Dimensions, LayoutChangeEvent, TouchableOpacity } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -46,13 +47,14 @@ export const SortableCard = ({
   children,
   isEditing,
   onReorder,
+  onDelete, // New prop
   onLongPress,
   onDragStart,
   onDragEnd,
   isActive,
   cardsCount,
   onTap,
-}: SortableCardProps) => {
+}: SortableCardProps & { onDelete?: () => void }) => {
   // Helper to get layout position for an index
   const getPosition = (idx: number) => {
     "worklet";
@@ -167,15 +169,12 @@ export const SortableCard = ({
 
   const gesture = Gesture.Race(pan, tap);
 
-  const placeholderStyle = useAnimatedStyle(
-    () => {
-      return {
-        transform: [{ rotate: `${rotation.value}deg` }],
-        opacity: isActive ? 0 : 1,
-      };
-    },
-    [isActive]
-  );
+  const placeholderStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+      opacity: isActive ? 0 : 1,
+    };
+  }, [isActive]);
 
   const activeCardStyle = useAnimatedStyle(() => {
     return {
@@ -203,19 +202,35 @@ export const SortableCard = ({
 
   return (
     <>
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          onLayout={handleLayout}
-          style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
-          layout={
-            isActive
-              ? undefined
-              : LinearTransition.duration(250).easing(Easing.out(Easing.quad))
-          }
-        >
-          {children}
-        </Animated.View>
-      </GestureDetector>
+      <Animated.View
+        onLayout={handleLayout}
+        style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
+        layout={
+          isActive
+            ? undefined
+            : LinearTransition.duration(250).easing(Easing.out(Easing.quad))
+        }
+      >
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={{ flex: 1 }}>{children}</Animated.View>
+        </GestureDetector>
+        {isEditing && (
+          <TouchableOpacity
+            onPress={onDelete}
+            style={{
+              position: "absolute",
+              top: -8,
+              left: -8,
+              zIndex: 50,
+              backgroundColor: "white",
+              borderRadius: 12,
+            }}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="remove-circle" size={28} color="#ef4444" />
+          </TouchableOpacity>
+        )}
+      </Animated.View>
       {isActive && (
         <Animated.View
           pointerEvents="none"
