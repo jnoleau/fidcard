@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useCardStore, Card } from "../store/useCardStore";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import Animated, { LinearTransition } from "react-native-reanimated";
@@ -13,6 +13,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function Index() {
   const insets = useSafeAreaInsets();
   const { cards, setCards } = useCardStore();
+  const router = useRouter();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [localCards, setLocalCards] = useState<Card[]>(cards);
@@ -86,21 +87,20 @@ export default function Index() {
                 isActive={activeId === card.id}
                 onDragStart={() => setActiveId(card.id)}
                 onDragEnd={() => setActiveId(null)}
+                onTap={() => router.push(`/edit/${card.id}`)}
               >
-                <Link href={`/edit/${card.id}`} asChild disabled={isEditing}>
-                  <TouchableOpacity
-                    className="w-full h-32 rounded-xl p-4 justify-between shadow-sm"
-                    style={{ backgroundColor: card.color }}
-                    disabled={isEditing}
-                  >
-                    <View className="self-end bg-white/20 p-1 rounded">
-                      <Ionicons name="qr-code" size={20} color="white" />
-                    </View>
-                    <Text className="text-white font-bold text-lg">
-                      {card.name}
-                    </Text>
-                  </TouchableOpacity>
-                </Link>
+                <TouchableOpacity
+                  className="w-full h-32 rounded-xl p-4 justify-between shadow-sm"
+                  style={{ backgroundColor: card.color }}
+                  activeOpacity={0.9}
+                >
+                  <View className="self-end bg-white/20 p-1 rounded">
+                    <Ionicons name="qr-code" size={20} color="white" />
+                  </View>
+                  <Text className="text-white font-bold text-lg">
+                    {card.name}
+                  </Text>
+                </TouchableOpacity>
               </SortableCard>
             ))}
 

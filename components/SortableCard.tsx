@@ -37,6 +37,7 @@ interface SortableCardProps {
   onDragEnd: () => void;
   isActive: boolean;
   cardsCount: number;
+  onTap: () => void;
 }
 
 export const SortableCard = ({
@@ -50,6 +51,7 @@ export const SortableCard = ({
   onDragEnd,
   isActive,
   cardsCount,
+  onTap,
 }: SortableCardProps) => {
   // Helper to get layout position for an index
   const getPosition = (idx: number) => {
@@ -128,7 +130,7 @@ export const SortableCard = ({
 
   const pan = Gesture.Pan()
     .minDistance(1)
-    .onBegin(() => {
+    .onStart(() => {
       if (!isEditing) {
         runOnJS(onLongPress)();
       }
@@ -153,6 +155,17 @@ export const SortableCard = ({
   if (!isEditing) {
     pan.activateAfterLongPress(LONG_PRESS_DURATION);
   }
+
+  const tap = Gesture.Tap()
+    .maxDuration(200)
+    .maxDistance(10)
+    .onEnd((_event, success) => {
+      if (success && !isEditing) {
+        runOnJS(onTap)();
+      }
+    });
+
+  const gesture = Gesture.Race(pan, tap);
 
   const placeholderStyle = useAnimatedStyle(
     () => {
@@ -190,7 +203,7 @@ export const SortableCard = ({
 
   return (
     <>
-      <GestureDetector gesture={pan}>
+      <GestureDetector gesture={gesture}>
         <Animated.View
           onLayout={handleLayout}
           style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
