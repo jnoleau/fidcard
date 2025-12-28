@@ -12,6 +12,7 @@ interface CardState {
     addCard: (card: Card) => void;
     removeCard: (id: string) => void;
     updateCard: (id: string, updates: Partial<Card>) => void;
+    setCards: (cards: Card[]) => void;
 }
 
 export const useCardStore = create<CardState>((set) => ({
@@ -29,4 +30,5 @@ export const useCardStore = create<CardState>((set) => ({
         set((state) => ({
             cards: state.cards.map((c) => (c.id === id ? { ...c, ...updates } : c)),
         })),
+    setCards: (cards) => set({ cards }),
 }));
