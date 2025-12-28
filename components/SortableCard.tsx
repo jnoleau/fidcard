@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
@@ -9,7 +9,6 @@ import Animated, {
   withSequence,
   withTiming,
   runOnJS,
-  useDerivedValue,
   useAnimatedReaction,
   LinearTransition,
   Easing,
@@ -25,6 +24,7 @@ const CARD_WIDTH_PCT = 0.48;
 const CARD_WIDTH = CONTAINER_WIDTH * CARD_WIDTH_PCT;
 const COLUMN_GAP = CONTAINER_WIDTH * (1 - CARD_WIDTH_PCT * 2); // remaining space
 const ROW_HEIGHT = 128 + 16; // h-32 (128) + mb-4 (16)
+const LONG_PRESS_DURATION = 250;
 
 interface SortableCardProps {
   id: string;
@@ -144,8 +144,11 @@ export const SortableCard = ({
   }, [isEditing, isActive]);
 
   const pan = Gesture.Pan()
-    .enabled(isEditing)
+    .minDistance(1)
     .onBegin(() => {
+      if (!isEditing) {
+        runOnJS(onLongPress)();
+      }
       pressed.value = true;
       runOnJS(onDragStart)();
       scale.value = withSpring(1.05);
@@ -166,34 +169,61 @@ export const SortableCard = ({
       scale.value = withSpring(1);
     });
 
-  const longPress = Gesture.LongPress().onStart(() => {
-    runOnJS(onLongPress)();
+  if (!isEditing) {
+    pan.activateAfterLongPress(LONG_PRESS_DURATION);
+  }
+
+  const placeholderStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+      opacity: isActive ? 0 : 1,
+    };
   });
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const activeCardStyle = useAnimatedStyle(() => {
+    const { x, y } = getPosition(index);
     return {
+      left: x,
+      top: y,
       transform: [
         { translateX: gestureX.value + offsetX.value },
         { translateY: gestureY.value + offsetY.value },
         { scale: scale.value },
         { rotate: `${rotation.value}deg` },
       ],
-      zIndex: isActive ? 9999 : 1,
     };
   });
 
   return (
-    <GestureDetector gesture={Gesture.Race(pan, longPress)}>
-      <Animated.View
-        style={[animatedStyle, { width: "48%", marginBottom: 16 }]}
-        layout={
-          isActive
-            ? undefined
-            : LinearTransition.duration(250).easing(Easing.out(Easing.quad))
-        }
-      >
-        {children}
-      </Animated.View>
-    </GestureDetector>
+    <>
+      <GestureDetector gesture={pan}>
+        <Animated.View
+          style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
+          layout={
+            isActive
+              ? undefined
+              : LinearTransition.duration(250).easing(Easing.out(Easing.quad))
+          }
+        >
+          {children}
+        </Animated.View>
+      </GestureDetector>
+      {isActive && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              width: "48%",
+              marginBottom: 16,
+              zIndex: 9999,
+            },
+            activeCardStyle,
+          ]}
+        >
+          {children}
+        </Animated.View>
+      )}
+    </>
   );
 };
