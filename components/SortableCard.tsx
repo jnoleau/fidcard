@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, LayoutChangeEvent } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
@@ -51,14 +51,6 @@ export const SortableCard = ({
   isActive,
   cardsCount,
 }: SortableCardProps) => {
-  const pressed = useSharedValue(false);
-  const gestureX = useSharedValue(0);
-  const gestureY = useSharedValue(0);
-  const offsetX = useSharedValue(0);
-  const offsetY = useSharedValue(0);
-  const scale = useSharedValue(1);
-  const rotation = useSharedValue(0);
-
   // Helper to get layout position for an index
   const getPosition = (idx: number) => {
     "worklet";
@@ -68,6 +60,17 @@ export const SortableCard = ({
     const y = row * ROW_HEIGHT;
     return { x, y };
   };
+
+  const pressed = useSharedValue(false);
+  const gestureX = useSharedValue(0);
+  const gestureY = useSharedValue(0);
+  const initialPosition = getPosition(index);
+  const slotX = useSharedValue(initialPosition.x);
+  const slotY = useSharedValue(initialPosition.y);
+  const activeBaseX = useSharedValue(initialPosition.x);
+  const activeBaseY = useSharedValue(initialPosition.y);
+  const scale = useSharedValue(1);
+  const rotation = useSharedValue(0);
 
   // Helper to get index from point
   const getIndexFromPoint = (x: number, y: number) => {
@@ -84,33 +87,13 @@ export const SortableCard = ({
     return Math.max(0, Math.min(idx, cardsCount - 1));
   };
 
-  // Layout Shift Compensation
-  useAnimatedReaction(
-    () => index,
-    (current, previous) => {
-      if (pressed.value && current !== previous && previous !== null) {
-        const curPos = getPosition(current);
-        const prevPos = getPosition(previous);
-        const deltaX = curPos.x - prevPos.x;
-        const deltaY = curPos.y - prevPos.y;
-
-        offsetX.value -= deltaX;
-        offsetY.value -= deltaY;
-      }
-    }
-  );
-
   // Live Reorder Trigger
   useAnimatedReaction(
     () => {
       if (!pressed.value) return -1;
 
-      const currentLayout = getPosition(index);
-      const absX = currentLayout.x + gestureX.value + offsetX.value;
-      const absY = currentLayout.y + gestureY.value + offsetY.value;
-
-      const cx = absX + CARD_WIDTH / 2;
-      const cy = absY + ROW_HEIGHT / 2;
+      const cx = activeBaseX.value + CARD_WIDTH / 2 + gestureX.value;
+      const cy = activeBaseY.value + ROW_HEIGHT / 2 + gestureY.value;
 
       return getIndexFromPoint(cx, cy);
     },
@@ -149,11 +132,11 @@ export const SortableCard = ({
       if (!isEditing) {
         runOnJS(onLongPress)();
       }
+      activeBaseX.value = slotX.value;
+      activeBaseY.value = slotY.value;
       pressed.value = true;
       runOnJS(onDragStart)();
       scale.value = withSpring(1.05);
-      offsetX.value = 0;
-      offsetY.value = 0;
     })
     .onUpdate((event) => {
       gestureX.value = event.translationX;
@@ -164,8 +147,6 @@ export const SortableCard = ({
       runOnJS(onDragEnd)();
       gestureX.value = withSpring(0);
       gestureY.value = withSpring(0);
-      offsetX.value = withSpring(0);
-      offsetY.value = withSpring(0);
       scale.value = withSpring(1);
     });
 
@@ -173,31 +154,45 @@ export const SortableCard = ({
     pan.activateAfterLongPress(LONG_PRESS_DURATION);
   }
 
-  const placeholderStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotate: `${rotation.value}deg` }],
-      opacity: isActive ? 0 : 1,
-    };
-  });
+  const placeholderStyle = useAnimatedStyle(
+    () => {
+      return {
+        transform: [{ rotate: `${rotation.value}deg` }],
+        opacity: isActive ? 0 : 1,
+      };
+    },
+    [isActive]
+  );
 
   const activeCardStyle = useAnimatedStyle(() => {
-    const { x, y } = getPosition(index);
     return {
-      left: x,
-      top: y,
+      left: activeBaseX.value,
+      top: activeBaseY.value,
       transform: [
-        { translateX: gestureX.value + offsetX.value },
-        { translateY: gestureY.value + offsetY.value },
+        { translateX: gestureX.value },
+        { translateY: gestureY.value },
         { scale: scale.value },
         { rotate: `${rotation.value}deg` },
       ],
     };
   });
 
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { x, y } = event.nativeEvent.layout;
+    slotX.value = x;
+    slotY.value = y;
+
+    if (!isActive) {
+      activeBaseX.value = x;
+      activeBaseY.value = y;
+    }
+  };
+
   return (
     <>
       <GestureDetector gesture={pan}>
         <Animated.View
+          onLayout={handleLayout}
           style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
           layout={
             isActive
