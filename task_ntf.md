@@ -9,3 +9,4 @@ Not to forget to
 - eas build dev
 - le store pour les cartes en asyncstorage ?
 - le partage via une url ?
+- font quicksand
