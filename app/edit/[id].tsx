@@ -7,10 +7,7 @@ import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import CodeDisplay from "../../components/CodeDisplay";
 
@@ -36,15 +33,8 @@ export default function EditCard() {
     card?.value || (initialValue as string) || ""
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showCode, setShowCode] = useState(false);
 
   const pickerColor = useSharedValue(color || "#ffffff");
-
-  const animatedCardStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: pickerColor.value,
-    };
-  });
 
   const openColorPicker = () => {
     pickerColor.value = color || "#ffffff";
@@ -112,7 +102,7 @@ export default function EditCard() {
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-800">
-          {showCode ? name : isNew ? t("edit.title_add") : t("edit.title_edit")}
+          {isNew ? t("edit.title_add") : t("edit.title_edit")}
         </Text>
         <TouchableOpacity
           onPress={handleSave}
@@ -131,24 +121,8 @@ export default function EditCard() {
         }}
         bottomOffset={20}
       >
-        <View className="mb-8 items-center">
-          <TouchableOpacity onPress={() => setShowCode(!showCode)}>
-            {showCode ? (
-              <CodeDisplay value={value} color={color} />
-            ) : (
-              <Animated.View
-                className="w-64 h-40 rounded-2xl p-6 justify-between shadow-lg relative"
-                style={[animatedCardStyle]}
-              >
-                <View className="self-end bg-white/20 p-2 rounded-lg">
-                  <Ionicons name="qr-code" size={32} color="white" />
-                </View>
-                <Text className="text-white font-bold text-2xl">
-                  {name || "..."}
-                </Text>
-              </Animated.View>
-            )}
-          </TouchableOpacity>
+        <View className="mb-8 items-center w-full px-4">
+          <CodeDisplay value={value} color={color} />
         </View>
 
         <View className="space-y-6">
