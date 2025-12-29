@@ -37,7 +37,12 @@ export default function CodeDisplay({ value, color }: CodeDisplayProps) {
         <View className="items-center w-full h-full justify-center px-4">
           <Barcode
             value={value}
-            options={{ format: "CODE128", width: 2, height: 100 }}
+            options={{
+              format: "CODE128",
+              width: 2,
+              height: 100,
+              displayValue: false,
+            }}
           />
           <Text className="mt-2 text-gray-600 font-medium tracking-widest">
             {value}
