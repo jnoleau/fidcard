@@ -133,9 +133,9 @@ export default function EditCard() {
         }}
         bottomOffset={20}
       >
-        <View className="mb-8 w-full px-4">
+        <View className="mb-8 px-2">
           <View
-            className="items-center justify-center bg-white rounded-2xl p-4 shadow-lg w-full aspect-[4/3]"
+            className="items-center justify-center bg-white rounded-2xl py-10 shadow-lg"
             style={{
               borderColor: color,
               borderWidth: 4,

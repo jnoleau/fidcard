@@ -27,7 +27,7 @@ export default function CodeDisplay({ value }: CodeDisplayProps) {
       {shouldUseQRCode ? (
         <QRCode value={value} size={200} />
       ) : (
-        <View className="items-center w-full h-full justify-center px-4">
+        <View className="items-center justify-center">
           <Barcode
             value={value}
             options={{
