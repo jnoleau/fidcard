@@ -133,6 +133,7 @@ export default function EditCard() {
             style={{
               borderColor: color,
               borderWidth: 4,
+              borderTopWidth: 40,
             }}
           >
             <CodeDisplay value={value} />
