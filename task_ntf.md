@@ -6,3 +6,6 @@ Not to forget to
 - le color picker a besoin d'internet ?
 - mode dark
 - améliorer le qr/bar code display condition
+- eas build dev
+- le store pour les cartes en asyncstorage ?
+- le partage via une url ?

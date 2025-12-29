@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Modal } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -164,7 +157,7 @@ export default function EditCard() {
               {t("edit.brand_label")}
             </Text>
             <View
-              className={`flex-row items-center bg-gray-50 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-100"} pr-3`}
+              className={`flex-row items-center rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} pr-3`}
             >
               <TextInput
                 className="flex-1 p-4"
@@ -193,7 +186,7 @@ export default function EditCard() {
               {t("edit.value_label")}
             </Text>
             <TextInput
-              className={`bg-gray-50 p-4 rounded-lg border ${errors.value ? "border-red-500" : "border-gray-100"}`}
+              className={`p-4 rounded-lg border ${errors.value ? "border-red-500" : "border-gray-300"}`}
               value={value}
               onChangeText={(text) => {
                 setValue(text);
