@@ -15,8 +15,7 @@ const en = {
     scan_card: "Add Card",
   },
   edit: {
-    title_edit: "Edit Card",
-    title_add: "Add Card",
+
     brand_label: "Brand Name",
     brand_placeholder: "Ex: Walmart, Target...",
     value_label: "Value (Barcode / QR Code)",
@@ -46,8 +45,7 @@ const fr = {
     scan_card: "Ajouter",
   },
   edit: {
-    title_edit: "Modifier la carte",
-    title_add: "Ajouter une carte",
+
     brand_label: "Enseigne",
     brand_placeholder: "Ex: Auchan, Fnac...",
     value_label: "Valeur (Code barre / QR Code)",

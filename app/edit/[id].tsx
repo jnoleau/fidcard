@@ -97,12 +97,18 @@ export default function EditCard() {
   return (
     <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
       <StatusBar style="dark" />
-      <View className="px-4 py-4 flex-row items-center justify-between border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
+      <View className="px-4 py-4 flex-row items-center border-b border-gray-100">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="p-2 -ml-2 mr-2"
+        >
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-800">
-          {isNew ? t("edit.title_add") : t("edit.title_edit")}
+        <Text
+          className="text-xl font-bold text-gray-800 flex-1"
+          numberOfLines={1}
+        >
+          {name}
         </Text>
         <TouchableOpacity
           onPress={handleSave}
