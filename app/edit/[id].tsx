@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
-import { useSharedValue } from "react-native-reanimated";
+import { useSharedValue, runOnJS } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import CodeDisplay from "../../components/CodeDisplay";
 
@@ -33,22 +33,28 @@ export default function EditCard() {
     card?.value || (initialValue as string) || ""
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [originalColor, setOriginalColor] = useState("");
 
   const pickerColor = useSharedValue(color || "#ffffff");
 
   const openColorPicker = () => {
-    pickerColor.value = color || "#ffffff";
+    const currentColor = color || "#ffffff";
+    setOriginalColor(currentColor);
+    pickerColor.value = currentColor;
     setShowColorPicker(true);
   };
 
   const handleCancelColor = () => {
-    pickerColor.value = color || "#ffffff"; // Reset preview to original color
+    setColor(originalColor);
     setShowColorPicker(false);
   };
 
   const handleConfirmColor = () => {
-    setColor(pickerColor.value);
     setShowColorPicker(false);
+  };
+
+  const onColorChange = (hex: string) => {
+    setColor(hex);
   };
 
   useEffect(() => {
@@ -226,6 +232,7 @@ export default function EditCard() {
                 onChange={({ hex }) => {
                   "worklet";
                   pickerColor.value = hex;
+                  runOnJS(onColorChange)(hex);
                 }}
               >
                 <Panel1 style={{ borderRadius: 16 }} />
