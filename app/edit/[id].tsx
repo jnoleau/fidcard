@@ -108,7 +108,7 @@ export default function EditCard() {
           className="text-xl font-bold text-gray-800 flex-1"
           numberOfLines={1}
         >
-          {name}
+          {name ? name : "..."}
         </Text>
         <TouchableOpacity
           onPress={handleSave}
