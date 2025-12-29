@@ -5,10 +5,9 @@ import { Barcode } from "expo-barcode-generator";
 
 interface CodeDisplayProps {
   value: string;
-  color: string;
 }
 
-export default function CodeDisplay({ value, color }: CodeDisplayProps) {
+export default function CodeDisplay({ value }: CodeDisplayProps) {
   if (!value) return null;
 
   // Simple heuristic:
@@ -24,13 +23,7 @@ export default function CodeDisplay({ value, color }: CodeDisplayProps) {
   const shouldUseQRCode = isLong;
 
   return (
-    <View
-      className="items-center justify-center bg-white rounded-2xl p-4 shadow-lg w-full aspect-[4/3]"
-      style={{
-        borderColor: color,
-        borderWidth: 4,
-      }}
-    >
+    <>
       {shouldUseQRCode ? (
         <QRCode value={value} size={200} />
       ) : (
@@ -49,6 +42,6 @@ export default function CodeDisplay({ value, color }: CodeDisplayProps) {
           </Text>
         </View>
       )}
-    </View>
+    </>
   );
 }

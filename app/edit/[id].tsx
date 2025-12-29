@@ -127,8 +127,16 @@ export default function EditCard() {
         }}
         bottomOffset={20}
       >
-        <View className="mb-8 items-center w-full px-4">
-          <CodeDisplay value={value} color={color} />
+        <View className="mb-8 w-full px-4">
+          <View
+            className="items-center justify-center bg-white rounded-2xl p-4 shadow-lg w-full aspect-[4/3]"
+            style={{
+              borderColor: color,
+              borderWidth: 4,
+            }}
+          >
+            <CodeDisplay value={value} />
+          </View>
         </View>
 
         <View className="space-y-6">
