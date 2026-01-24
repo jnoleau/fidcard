@@ -18,32 +18,20 @@ export default function EditCard() {
   const router = useRouter();
   const { cards, updateCard, addCard } = useCardStore();
 
-  const isNew = id === "new";
-  const existingCard = !isNew ? cards.find((c) => c.id === id) : null;
+  const card = cards.find((c) => c.id === id) || {
+    id: undefined,
+    name: "",
+    color: paramColor,
+    value: paramValue,
+    format: paramFormat,
+  };
 
-  // Default format heuristic: QR if > 20 chars, else Barcode
-  const getFormat = (val?: string) =>
-    val && val.length > 20 ? "qrcode" : "barcode";
-
-  // Determine initial values based on mode (new vs edit)
-  const initialCardValues = isNew
-    ? {
-        name: "",
-        color: paramColor || "#ffffff",
-        value: paramValue || "",
-        format: (paramFormat as "qrcode" | "barcode") || getFormat(paramValue),
-      }
-    : existingCard
-      ? {
-          name: existingCard.name,
-          color: existingCard.color,
-          value: existingCard.value,
-          format: existingCard.format,
-        }
-      : null;
+  const initialColor = card.color;
+  const initialValue = card.value;
+  const initialFormat = card.format;
 
   // If we are editing but card is not found, we handle it below
-  if (!isNew && !existingCard) {
+  if (!initialColor || !initialValue || !initialFormat) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>Carte non trouvée</Text>
@@ -57,7 +45,7 @@ export default function EditCard() {
     value: string;
     format: "qrcode" | "barcode";
   }) => {
-    if (isNew) {
+    if (card.id === undefined) {
       addCard({
         id: Date.now().toString(),
         ...data,
@@ -70,7 +58,12 @@ export default function EditCard() {
 
   return (
     <CardEditor
-      initialValues={initialCardValues!}
+      initialValues={{
+        name: card.name,
+        color: initialColor,
+        value: initialValue,
+        format: initialFormat,
+      }}
       onSave={handleSave}
       onCancel={() => router.back()}
     />
