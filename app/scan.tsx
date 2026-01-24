@@ -66,11 +66,13 @@ export default function ScanScreen() {
         .toString(16)
         .padStart(6, "0");
 
+    const format = type === "qr" ? "qrcode" : "barcode";
+
     // Navigate to edit screen with params
     router.dismiss();
     router.push({
       pathname: "/edit/new",
-      params: { value: data, color: randomColor },
+      params: { value: data, color: randomColor, format },
     } as any);
   };
 

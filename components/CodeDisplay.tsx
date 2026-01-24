@@ -5,26 +5,15 @@ import { Barcode } from "expo-barcode-generator";
 
 interface CodeDisplayProps {
   value: string;
+  format: "qrcode" | "barcode";
 }
 
-export default function CodeDisplay({ value }: CodeDisplayProps) {
+export default function CodeDisplay({ value, format }: CodeDisplayProps) {
   if (!value) return null;
-
-  // Simple heuristic:
-  // If it's short and alphanumeric (and not a URL), prefer Barcode (Code128).
-  // If it's long (> 20 chars) or looks like a URL, use QR Code.
-  // Code128 supports ASCII 0-127.
-
-  const isLong = value.length > 20;
-  // Check if contains characters not supported by standard barcodes easily or if user prefers QR for complex data
-  // For this app, let's assume if it fits in valid Code128, we try barcode, else QR.
-  // However, Code128 can get very wide.
-
-  const shouldUseQRCode = isLong;
 
   return (
     <>
-      {shouldUseQRCode ? (
+      {format === "qrcode" ? (
         <QRCode value={value} size={200} />
       ) : (
         <View className="items-center justify-center">

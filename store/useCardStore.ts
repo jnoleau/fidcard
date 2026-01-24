@@ -5,6 +5,7 @@ export interface Card {
     name: string;
     color: string;
     value: string;
+    format: 'qrcode' | 'barcode';
 }
 
 interface CardState {
@@ -17,12 +18,12 @@ interface CardState {
 
 export const useCardStore = create<CardState>((set) => ({
     cards: [
-        { id: '1', name: 'Auchan', color: '#e10600', value: '123456789' },
-        { id: '2', name: 'Carrefour', color: '#0058a9', value: '987654321' },
-        { id: '3', name: 'Fnac', color: '#ffcc00', value: '456789123' },
-        { id: '4', name: 'IKEA', color: '#0051ba', value: '321654987' },
-        { id: '5', name: 'Decathlon', color: '#0082c3', value: '654321987' },
-        { id: '6', name: 'Leroy Merlin', color: '#68a51c', value: '789123456' },
+        { id: '1', name: 'Auchan', color: '#e10600', value: '123456789', format: 'barcode' },
+        { id: '2', name: 'Carrefour', color: '#0058a9', value: '987654321', format: 'barcode' },
+        { id: '3', name: 'Fnac', color: '#ffcc00', value: '456789123', format: 'barcode' },
+        { id: '4', name: 'IKEA', color: '#0051ba', value: '321654987', format: 'barcode' },
+        { id: '5', name: 'Decathlon', color: '#0082c3', value: '654321987', format: 'barcode' },
+        { id: '6', name: 'Leroy Merlin', color: '#68a51c', value: '789123456', format: 'barcode' },
     ],
     addCard: (card) => set((state) => ({ cards: [...state.cards, card] })),
     removeCard: (id) => set((state) => ({ cards: state.cards.filter((c) => c.id !== id) })),
