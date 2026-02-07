@@ -133,6 +133,9 @@ export default function CardEditor({
               <TextInput
                 className="flex-1 p-4"
                 value={name}
+                selectTextOnFocus
+                autoCorrect={false}
+                spellCheck={false}
                 onChangeText={(text) => {
                   setName(text);
                   if (errors.name) setErrors({ ...errors, name: undefined });
@@ -162,6 +165,9 @@ export default function CardEditor({
               <TextInput
                 className="flex-1 p-4"
                 value={value}
+                selectTextOnFocus
+                autoCorrect={false}
+                spellCheck={false}
                 onChangeText={(text) => {
                   setValue(text);
                   if (errors.value) setErrors({ ...errors, value: undefined });
