@@ -31,7 +31,11 @@ export default function EditCard() {
   const initialFormat = card.format;
 
   // If we are editing but card is not found, we handle it below
-  if (!initialColor || !initialValue || !initialFormat) {
+  if (
+    initialColor === undefined ||
+    initialValue === undefined ||
+    initialFormat === undefined
+  ) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>Carte non trouvée</Text>

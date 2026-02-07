@@ -30,6 +30,7 @@ const en = {
     permission_denied: "Camera permission denied",
     permission_request: "We need your permission to show the camera",
     grant_permission: "Grant Permission",
+    manual_button: "Enter Manually",
   },
 };
 
@@ -60,6 +61,7 @@ const fr = {
     permission_denied: "Permission caméra refusée",
     permission_request: "Nous avons besoin de la permission pour utiliser la caméra",
     grant_permission: "Autoriser l'accès",
+    manual_button: "Saisir manuellement",
   },
 };
 

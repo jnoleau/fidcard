@@ -37,7 +37,7 @@ export default function CardEditor({
   const [color, setColor] = useState(initialValues.color);
   const [value, setValue] = useState(initialValues.value);
   const [format, setFormat] = useState<"qrcode" | "barcode">(
-    initialValues.format
+    initialValues.format,
   );
 
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -118,7 +118,7 @@ export default function CardEditor({
               borderTopWidth: 40,
             }}
           >
-            <CodeDisplay value={value} format={format} />
+            <CodeDisplay value={value || "123456"} format={format} />
           </View>
         </View>
 
@@ -171,7 +171,7 @@ export default function CardEditor({
               <TouchableOpacity
                 onPress={() =>
                   setFormat((prev) =>
-                    prev === "barcode" ? "qrcode" : "barcode"
+                    prev === "barcode" ? "qrcode" : "barcode",
                   )
                 }
                 className="p-2 bg-gray-100 rounded-md ml-2"
