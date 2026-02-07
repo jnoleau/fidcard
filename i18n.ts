@@ -23,6 +23,7 @@ const en = {
     color_title: "Color",
     error_name: "Name is required",
     error_value: "Value is required",
+    error_invalid_format: "This format does not support these characters",
   },
   scan: {
     title: "Scan Barcode",
@@ -54,6 +55,7 @@ const fr = {
     color_title: "Couleur",
     error_name: "Le nom est obligatoire",
     error_value: "La valeur est obligatoire",
+    error_invalid_format: "Ce format ne supporte pas ces caractères",
   },
   scan: {
     title: "Scanner un code-barres",
