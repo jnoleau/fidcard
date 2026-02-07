@@ -104,34 +104,36 @@ export default function ScanScreen() {
           {t("scan.instruction") || "Scannez le code-barres de votre carte"}
         </Text>
 
-        <View style={styles.cameraContainer}>
-          <CameraView
-            style={styles.camera}
-            facing="back"
-            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-            barcodeScannerSettings={{
-              barcodeTypes: [
-                "qr",
-                "ean13",
-                "ean8",
-                "pdf417",
-                "aztec",
-                "datamatrix",
-                "code39",
-                "code93",
-                "itf14",
-                "codabar",
-                "code128",
-                "upc_a",
-                "upc_e",
-              ],
-            }}
-          />
-          {/* Corner markers for visual style */}
-          <View style={[styles.cornerMarker, styles.topLeft]} />
-          <View style={[styles.cornerMarker, styles.topRight]} />
-          <View style={[styles.cornerMarker, styles.bottomLeft]} />
-          <View style={[styles.cornerMarker, styles.bottomRight]} />
+        <View style={styles.cameraWrapper}>
+          <View style={styles.cameraContainer}>
+            <CameraView
+              style={styles.camera}
+              facing="back"
+              onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+              barcodeScannerSettings={{
+                barcodeTypes: [
+                  "qr",
+                  "ean13",
+                  "ean8",
+                  "pdf417",
+                  "aztec",
+                  "datamatrix",
+                  "code39",
+                  "code93",
+                  "itf14",
+                  "codabar",
+                  "code128",
+                  "upc_a",
+                  "upc_e",
+                ],
+              }}
+            />
+            {/* Corner markers for visual style */}
+            <View style={[styles.cornerMarker, styles.topLeft]} />
+            <View style={[styles.cornerMarker, styles.topRight]} />
+            <View style={[styles.cornerMarker, styles.bottomLeft]} />
+            <View style={[styles.cornerMarker, styles.bottomRight]} />
+          </View>
         </View>
 
         <View style={styles.manualEntryContainer}>
@@ -232,9 +234,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 32,
   },
+  cameraWrapper: {
+    width: "100%",
+    paddingHorizontal: 32,
+    alignItems: "center",
+  },
   cameraContainer: {
-    width: 320,
-    height: 240,
+    width: "100%",
+    height: 320,
     borderRadius: 24,
     overflow: "hidden",
     position: "relative",
