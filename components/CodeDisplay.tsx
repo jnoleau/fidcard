@@ -1,32 +1,41 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "./tw";
 import QRCode from "react-native-qrcode-svg";
 import { Barcode } from "expo-barcode-generator";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useCSSVariable } from "./tw";
 
 interface CodeDisplayProps {
   value: string;
   format: "qrcode" | "barcode";
 }
 
-// Helper to check if string contains only ASCII characters supported by CODE128
 const isCode128Compatible = (value: string) => {
   return /^[\x00-\x7F]*$/.test(value);
 };
 
-export default function CodeDisplay({ value, format }: CodeDisplayProps) {
+function CodeDisplay({ value, format }: CodeDisplayProps) {
   const { t } = useTranslation();
+  const destructive = useCSSVariable("--color-destructive");
+  const muted = useCSSVariable("--color-muted");
 
-  if (!value) return null;
+  if (!value) {
+    return (
+      <View className="items-center justify-center p-4">
+        <Ionicons name="qr-code-outline" size={48} color={muted} />
+        <Text className="text-muted text-center mt-2 font-medium">
+          {t("edit.value_placeholder")}
+        </Text>
+      </View>
+    );
+  }
 
-  // Check compatibility for Barcode (CODE128)
-  // If incompatible, display an error message instead of crashing or auto-fallback
   if (format === "barcode" && !isCode128Compatible(value)) {
     return (
       <View className="items-center justify-center p-4">
-        <Ionicons name="warning-outline" size={48} color="#ef4444" />
-        <Text className="text-red-500 text-center mt-2 font-medium">
+        <Ionicons name="warning-outline" size={48} color={destructive} />
+        <Text className="text-destructive text-center mt-2 font-medium">
           {t("edit.error_invalid_format")}
         </Text>
       </View>
@@ -48,7 +57,7 @@ export default function CodeDisplay({ value, format }: CodeDisplayProps) {
               displayValue: false,
             }}
           />
-          <Text className="mt-2 text-gray-600 font-medium tracking-widest">
+          <Text className="mt-2 text-muted font-medium tracking-widest">
             {value}
           </Text>
         </View>
@@ -56,3 +65,5 @@ export default function CodeDisplay({ value, format }: CodeDisplayProps) {
     </>
   );
 }
+
+export default React.memo(CodeDisplay);
