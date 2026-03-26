@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCardStore } from "../../store/useCardStore";
 import CardEditor from "../../components/CardEditor";
+import { View, Text } from "../../components/tw";
+import { randomUUID } from "expo-crypto";
 
 export default function EditCard() {
   const {
@@ -30,7 +31,6 @@ export default function EditCard() {
   const initialValue = card.value;
   const initialFormat = card.format;
 
-  // If we are editing but card is not found, we handle it below
   if (
     initialColor === undefined ||
     initialValue === undefined ||
@@ -38,7 +38,7 @@ export default function EditCard() {
   ) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text>Carte non trouvée</Text>
+        <Text className="text-muted">Card not found</Text>
       </View>
     );
   }
@@ -51,7 +51,7 @@ export default function EditCard() {
   }) => {
     if (card.id === undefined) {
       addCard({
-        id: Date.now().toString(),
+        id: randomUUID(),
         ...data,
       });
     } else {
