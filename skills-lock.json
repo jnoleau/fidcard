@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "creating-reanimated-animations": {
+      "source": "estevg/skills",
+      "sourceType": "github",
+      "computedHash": "5406c06d9f9462e0562d419db34d75eeb0ae1e42fe34660a4a425e04acbbae91"
+    },
     "expo-tailwind-setup": {
       "source": "expo/skills",
       "sourceType": "github",
