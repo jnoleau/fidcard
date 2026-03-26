@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text } from "./tw";
+import { View, Text , useCSSVariable } from "./tw";
 import QRCode from "react-native-qrcode-svg";
 import { Barcode } from "expo-barcode-generator";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { useCSSVariable } from "./tw";
 
 interface CodeDisplayProps {
   value: string;

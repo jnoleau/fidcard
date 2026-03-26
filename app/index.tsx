@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { View, Text, TouchableOpacity, Link } from "../components/tw";
+import { View, Text, TouchableOpacity, Link , useCSSVariable } from "../components/tw";
 import { Animated } from "../components/tw/animated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -9,7 +9,6 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { SortableCard } from "../components/SortableCard";
-import { useCSSVariable } from "../components/tw";
 
 export default function Index() {
   const insets = useSafeAreaInsets();

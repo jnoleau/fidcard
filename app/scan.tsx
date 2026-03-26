@@ -70,8 +70,8 @@ export default function ScanScreen() {
 
     router.dismiss();
     router.push({
-      pathname: "/edit/new",
-      params: { value: data, color: randomColor, format },
+      pathname: "/edit/[id]",
+      params: { id: "new", value: data, color: randomColor, format },
     });
   };
 
@@ -151,8 +151,9 @@ export default function ScanScreen() {
 
               router.dismiss();
               router.push({
-                pathname: "/edit/new",
+                pathname: "/edit/[id]",
                 params: {
+                  id: "new",
                   value: "",
                   color: randomColor,
                   format: "qrcode",

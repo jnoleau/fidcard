@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { LayoutChangeEvent } from "react-native";
-import { TouchableOpacity } from "./tw";
+import { TouchableOpacity , useCSSVariable } from "./tw";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import Animated, {
+import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -15,6 +15,7 @@ import Animated, {
   LinearTransition,
   Easing,
 } from "react-native-reanimated";
+import { Animated } from "./tw/animated";
 import {
   CONTAINER_WIDTH,
   CARD_WIDTH,
@@ -23,7 +24,6 @@ import {
   LONG_PRESS_DURATION,
   WOBBLE_DURATION,
 } from "../constants";
-import { useCSSVariable } from "./tw";
 
 interface SortableCardProps {
   id: string;
@@ -119,7 +119,7 @@ function SortableCardInner({
     } else {
       rotation.value = withTiming(0);
     }
-  }, [isEditing, isActive]);
+  }, [isEditing, isActive, rotation]);
 
   const pan = Gesture.Pan()
     .minDistance(1)

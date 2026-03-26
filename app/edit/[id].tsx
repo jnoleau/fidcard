@@ -2,7 +2,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCardStore } from "../../store/useCardStore";
 import CardEditor from "../../components/CardEditor";
 import { View, Text } from "../../components/tw";
-import { randomUUID } from "expo-crypto";
 
 export default function EditCard() {
   const {
@@ -51,7 +50,7 @@ export default function EditCard() {
   }) => {
     if (card.id === undefined) {
       addCard({
-        id: randomUUID(),
+        id: Date.now().toString(),
         ...data,
       });
     } else {

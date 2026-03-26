@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Modal } from "./tw";
+import { View, Text, TextInput, TouchableOpacity, Modal , useCSSVariable } from "./tw";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -8,7 +8,6 @@ import { useSharedValue, runOnJS } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CodeDisplay from "./CodeDisplay";
-import { useCSSVariable } from "./tw";
 
 interface CardEditorProps {
   initialValues: {
