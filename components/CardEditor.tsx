@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Modal } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Modal } from "./tw";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -8,6 +8,7 @@ import { useSharedValue, runOnJS } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CodeDisplay from "./CodeDisplay";
+import { useCSSVariable } from "./tw";
 
 interface CardEditorProps {
   initialValues: {
@@ -32,6 +33,8 @@ export default function CardEditor({
 }: CardEditorProps) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const foreground = useCSSVariable("--color-foreground");
+  const muted = useCSSVariable("--color-muted");
 
   const [name, setName] = useState(initialValues.name);
   const [color, setColor] = useState(initialValues.color);
@@ -82,21 +85,30 @@ export default function CardEditor({
   return (
     <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
       <StatusBar style="dark" />
-      <View className="px-4 py-4 flex-row items-center border-b border-gray-100">
-        <TouchableOpacity onPress={onCancel} className="p-2 -ml-2 mr-2">
-          <Ionicons name="arrow-back" size={24} color="#333" />
+      <View className="px-4 py-4 flex-row items-center border-b border-border">
+        <TouchableOpacity
+          onPress={onCancel}
+          className="p-2 -ml-2 mr-2"
+          accessibilityLabel={t("common.cancel")}
+          accessibilityRole="button"
+        >
+          <Ionicons name="arrow-back" size={24} color={foreground} />
         </TouchableOpacity>
         <Text
-          className="text-xl font-bold text-gray-800 flex-1"
+          className="text-xl font-bold text-foreground flex-1"
           numberOfLines={1}
         >
           {name ? name : "..."}
         </Text>
         <TouchableOpacity
           onPress={handleSave}
-          className={`bg-blue-600 px-4 py-2 rounded-lg ${errors.name || errors.value ? "opacity-50" : ""}`}
+          className={`bg-primary px-4 py-2 rounded-lg ${errors.name || errors.value ? "opacity-50" : ""}`}
+          accessibilityLabel={t("common.save")}
+          accessibilityRole="button"
         >
-          <Text className="text-white font-bold">{t("common.save")}</Text>
+          <Text className="text-primary-foreground font-bold">
+            {t("common.save")}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -122,13 +134,13 @@ export default function CardEditor({
           </View>
         </View>
 
-        <View className="space-y-6">
+        <View className="gap-6">
           <View>
-            <Text className="text-sm font-medium text-gray-500 mb-2 ml-1">
+            <Text className="text-sm font-medium text-muted mb-2 ml-1">
               {t("edit.brand_label")}
             </Text>
             <View
-              className={`flex-row items-center rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} pr-3`}
+              className={`flex-row items-center rounded-lg border ${errors.name ? "border-destructive" : "border-border"} pr-3`}
             >
               <TextInput
                 className="flex-1 p-4"
@@ -141,26 +153,29 @@ export default function CardEditor({
                   if (errors.name) setErrors({ ...errors, name: undefined });
                 }}
                 placeholder={t("edit.brand_placeholder")}
+                accessibilityLabel={t("edit.brand_label")}
               />
               <TouchableOpacity
                 onPress={openColorPicker}
-                className="w-8 h-8 rounded border border-gray-200 shadow-sm ml-2"
+                className="w-8 h-8 rounded border border-border shadow-sm ml-2"
                 style={{ backgroundColor: color || "#ffffff" }}
+                accessibilityLabel={t("edit.color_title")}
+                accessibilityRole="button"
               />
             </View>
             {errors.name && (
-              <Text className="text-red-500 text-sm ml-1 mt-1">
+              <Text className="text-destructive text-sm ml-1 mt-1">
                 {errors.name}
               </Text>
             )}
           </View>
 
-          <View className="mt-4">
-            <Text className="text-sm font-medium text-gray-500 mb-2 ml-1">
+          <View>
+            <Text className="text-sm font-medium text-muted mb-2 ml-1">
               {t("edit.value_label")}
             </Text>
             <View
-              className={`flex-row items-center rounded-lg border ${errors.value ? "border-red-500" : "border-gray-300"} pr-3`}
+              className={`flex-row items-center rounded-lg border ${errors.value ? "border-destructive" : "border-border"} pr-3`}
             >
               <TextInput
                 className="flex-1 p-4"
@@ -173,6 +188,7 @@ export default function CardEditor({
                   if (errors.value) setErrors({ ...errors, value: undefined });
                 }}
                 placeholder={t("edit.value_placeholder")}
+                accessibilityLabel={t("edit.value_label")}
               />
               <TouchableOpacity
                 onPress={() =>
@@ -180,19 +196,23 @@ export default function CardEditor({
                     prev === "barcode" ? "qrcode" : "barcode",
                   )
                 }
-                className="p-2 bg-gray-100 rounded-md ml-2"
+                className="p-2 bg-background rounded-md ml-2"
+                accessibilityLabel={t("edit.toggle_format")}
+                accessibilityRole="button"
               >
                 <Ionicons
                   name={
-                    format === "barcode" ? "barcode-outline" : "qr-code-outline"
+                    format === "barcode"
+                      ? "barcode-outline"
+                      : "qr-code-outline"
                   }
                   size={24}
-                  color="#666"
+                  color={muted}
                 />
               </TouchableOpacity>
             </View>
             {errors.value && (
-              <Text className="text-red-500 text-sm ml-1 mt-1">
+              <Text className="text-destructive text-sm ml-1 mt-1">
                 {errors.value}
               </Text>
             )}
@@ -207,21 +227,25 @@ export default function CardEditor({
               <TouchableOpacity
                 onPress={handleCancelColor}
                 className="px-4 py-2"
+                accessibilityLabel={t("common.cancel")}
+                accessibilityRole="button"
               >
-                <Text className="text-red-500 font-medium text-lg">
+                <Text className="text-destructive font-medium text-lg">
                   {t("common.cancel")}
                 </Text>
               </TouchableOpacity>
 
-              <Text className="text-xl font-bold text-gray-800">
+              <Text className="text-xl font-bold text-foreground">
                 {t("edit.color_title")}
               </Text>
 
               <TouchableOpacity
                 onPress={handleConfirmColor}
-                className="bg-blue-600 px-4 py-2 rounded-full"
+                className="bg-primary px-4 py-2 rounded-full"
+                accessibilityLabel={t("common.confirm")}
+                accessibilityRole="button"
               >
-                <Text className="text-white font-bold">
+                <Text className="text-primary-foreground font-bold">
                   {t("common.confirm")}
                 </Text>
               </TouchableOpacity>
