@@ -9,13 +9,15 @@ const en = {
     cancel: "Cancel",
     confirm: "Confirm",
     close: "Close",
+    delete: "Delete",
   },
   home: {
     title: "My Cards",
     scan_card: "Add Card",
+    delete_card_title: "Delete Card",
+    delete_card_message: "Are you sure you want to delete {{name}}?",
   },
   edit: {
-
     brand_label: "Brand Name",
     brand_placeholder: "Ex: Walmart, Target...",
     value_label: "Value (Barcode / QR Code)",
@@ -23,7 +25,9 @@ const en = {
     color_title: "Color",
     error_name: "Name is required",
     error_value: "Value is required",
-    error_invalid_format: "This format does not support these characters. Switch to QR code.",
+    error_invalid_format:
+      "This format does not support these characters. Switch to QR code.",
+    toggle_format: "Toggle format",
   },
   scan: {
     title: "Scan Barcode",
@@ -41,13 +45,15 @@ const fr = {
     cancel: "Annuler",
     confirm: "Valider",
     close: "Fermer",
+    delete: "Supprimer",
   },
   home: {
     title: "Mes Cartes",
     scan_card: "Ajouter",
+    delete_card_title: "Supprimer la carte",
+    delete_card_message: "Voulez-vous supprimer la carte {{name}} ?",
   },
   edit: {
-
     brand_label: "Enseigne",
     brand_placeholder: "Ex: Auchan, Fnac...",
     value_label: "Valeur (Code barre / QR Code)",
@@ -55,13 +61,16 @@ const fr = {
     color_title: "Couleur",
     error_name: "Le nom est obligatoire",
     error_value: "La valeur est obligatoire",
-    error_invalid_format: "Ce format ne supporte pas ces caractères. Passez au QR code.",
+    error_invalid_format:
+      "Ce format ne supporte pas ces caractères. Passez au QR code.",
+    toggle_format: "Changer de format",
   },
   scan: {
     title: "Scanner un code-barres",
     instruction: "Placez le code-barres dans le cadre",
     permission_denied: "Permission caméra refusée",
-    permission_request: "Nous avons besoin de la permission pour utiliser la caméra",
+    permission_request:
+      "Nous avons besoin de la permission pour utiliser la caméra",
     grant_permission: "Autoriser l'accès",
     manual_button: "Saisir manuellement",
   },
