@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import { Dimensions, LayoutChangeEvent, TouchableOpacity } from "react-native";
+import { LayoutChangeEvent } from "react-native";
+import { TouchableOpacity } from "./tw";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
@@ -14,18 +15,15 @@ import Animated, {
   LinearTransition,
   Easing,
 } from "react-native-reanimated";
-
-// Screen dimensions and layout constants
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const PADDING = 16;
-const CONTAINER_WIDTH = SCREEN_WIDTH - 32; // px-4 = 16*2
-const COLUMNS = 2;
-// Logic from UI: w-[48%] + justify-between
-const CARD_WIDTH_PCT = 0.48;
-const CARD_WIDTH = CONTAINER_WIDTH * CARD_WIDTH_PCT;
-const COLUMN_GAP = CONTAINER_WIDTH * (1 - CARD_WIDTH_PCT * 2); // remaining space
-const ROW_HEIGHT = 128 + 16; // h-32 (128) + mb-4 (16)
-const LONG_PRESS_DURATION = 250;
+import {
+  CONTAINER_WIDTH,
+  CARD_WIDTH,
+  COLUMNS,
+  ROW_HEIGHT,
+  LONG_PRESS_DURATION,
+  WOBBLE_DURATION,
+} from "../constants";
+import { useCSSVariable } from "./tw";
 
 interface SortableCardProps {
   id: string;
@@ -33,6 +31,7 @@ interface SortableCardProps {
   children: ReactNode;
   isEditing: boolean;
   onReorder: (fromIndex: number, toIndex: number) => void;
+  onDelete?: () => void;
   onLongPress: () => void;
   onDragStart: () => void;
   onDragEnd: () => void;
@@ -41,21 +40,22 @@ interface SortableCardProps {
   onTap: () => void;
 }
 
-export const SortableCard = ({
+function SortableCardInner({
   id,
   index,
   children,
   isEditing,
   onReorder,
-  onDelete, // New prop
+  onDelete,
   onLongPress,
   onDragStart,
   onDragEnd,
   isActive,
   cardsCount,
   onTap,
-}: SortableCardProps & { onDelete?: () => void }) => {
-  // Helper to get layout position for an index
+}: SortableCardProps) {
+  const destructive = useCSSVariable("--color-destructive");
+
   const getPosition = (idx: number) => {
     "worklet";
     const row = Math.floor(idx / COLUMNS);
@@ -76,29 +76,21 @@ export const SortableCard = ({
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
 
-  // Helper to get index from point
   const getIndexFromPoint = (x: number, y: number) => {
     "worklet";
     const clampedX = Math.max(0, Math.min(x, CONTAINER_WIDTH));
     const col = clampedX > CONTAINER_WIDTH / 2 ? 1 : 0;
-
-    // Clamp y
     const safeY = Math.max(0, y);
     const row = Math.floor(safeY / ROW_HEIGHT);
-
     const idx = row * COLUMNS + col;
-    // Allow dragging to end of list
     return Math.max(0, Math.min(idx, cardsCount - 1));
   };
 
-  // Live Reorder Trigger
   useAnimatedReaction(
     () => {
       if (!pressed.value) return -1;
-
       const cx = activeBaseX.value + CARD_WIDTH / 2 + gestureX.value;
       const cy = activeBaseY.value + ROW_HEIGHT / 2 + gestureY.value;
-
       return getIndexFromPoint(cx, cy);
     },
     (targetIndex, prevTarget) => {
@@ -109,21 +101,20 @@ export const SortableCard = ({
       ) {
         runOnJS(onReorder)(index, targetIndex);
       }
-    }
+    },
   );
 
-  // Wobble animation
   React.useEffect(() => {
     if (isEditing && !isActive) {
       rotation.value = withRepeat(
         withSequence(
-          withTiming(-2, { duration: 100 }),
-          withTiming(2, { duration: 100 }),
-          withTiming(-2, { duration: 100 }),
-          withTiming(0, { duration: 100 })
+          withTiming(-2, { duration: WOBBLE_DURATION }),
+          withTiming(2, { duration: WOBBLE_DURATION }),
+          withTiming(-2, { duration: WOBBLE_DURATION }),
+          withTiming(0, { duration: WOBBLE_DURATION }),
         ),
         -1,
-        true
+        true,
       );
     } else {
       rotation.value = withTiming(0);
@@ -193,7 +184,6 @@ export const SortableCard = ({
     const { x, y } = event.nativeEvent.layout;
     slotX.value = x;
     slotY.value = y;
-
     if (!isActive) {
       activeBaseX.value = x;
       activeBaseY.value = y;
@@ -204,7 +194,8 @@ export const SortableCard = ({
     <>
       <Animated.View
         onLayout={handleLayout}
-        style={[{ width: "48%", marginBottom: 16 }, placeholderStyle]}
+        className="w-[48%] mb-4"
+        style={placeholderStyle}
         layout={
           isActive
             ? undefined
@@ -212,41 +203,31 @@ export const SortableCard = ({
         }
       >
         <GestureDetector gesture={gesture}>
-          <Animated.View style={{ flex: 1 }}>{children}</Animated.View>
+          <Animated.View className="flex-1">{children}</Animated.View>
         </GestureDetector>
         {isEditing && (
           <TouchableOpacity
             onPress={onDelete}
-            style={{
-              position: "absolute",
-              top: -8,
-              left: -8,
-              zIndex: 50,
-              backgroundColor: "white",
-              borderRadius: 12,
-            }}
+            className="absolute -top-2 -left-2 z-50 bg-white rounded-xl"
             activeOpacity={0.7}
+            accessibilityLabel="Delete card"
+            accessibilityRole="button"
           >
-            <Ionicons name="remove-circle" size={28} color="#ef4444" />
+            <Ionicons name="remove-circle" size={28} color={destructive} />
           </TouchableOpacity>
         )}
       </Animated.View>
       {isActive && (
         <Animated.View
           pointerEvents="none"
-          style={[
-            {
-              position: "absolute",
-              width: "48%",
-              marginBottom: 16,
-              zIndex: 9999,
-            },
-            activeCardStyle,
-          ]}
+          className="absolute w-[48%] mb-4 z-[9999]"
+          style={activeCardStyle}
         >
           {children}
         </Animated.View>
       )}
     </>
   );
-};
+}
+
+export const SortableCard = React.memo(SortableCardInner);
