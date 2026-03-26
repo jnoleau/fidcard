@@ -28,7 +28,7 @@ Migration first, then styling conversion, then quality improvements. Each file t
 
 **Install:**
 - `nativewind@preview` (v5)
-- `react-native-css` (peer dependency for NativeWind v5)
+- `react-native-css@^3.0.1` (peer dependency for NativeWind v5, pin to stable)
 - `@tailwindcss/postcss` (PostCSS plugin for Tailwind v4)
 - `tailwind-merge` + `clsx` (utility for className merging)
 
