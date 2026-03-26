@@ -110,7 +110,7 @@ export default function ScanScreen() {
         <View className="w-full px-8 items-center">
           <View className="w-full h-80 rounded-3xl overflow-hidden relative bg-black">
             <CameraView
-              className="flex-1"
+              style={{ flex: 1 }}
               facing="back"
               onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
               barcodeScannerSettings={{
