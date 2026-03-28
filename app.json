@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.devanco.basic.fidcard"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +20,11 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -46,6 +51,16 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "platforms": ["ios", "android"]
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d43d4a89-0065-4d38-b54d-ecc1d5394cc7"
+      }
+    },
+    "owner": "devanco"
   }
 }
