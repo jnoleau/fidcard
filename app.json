@@ -10,9 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.devanco.basic.fidcard"
+      "bundleIdentifier": "com.devanco.basic.fidcard",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "package": "com.devanco.basic.fidcard",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#111827",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -51,10 +54,7 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "extra": {
       "router": {},
       "eas": {
