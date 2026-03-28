@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "../components/tw";
 import { Animated } from "../components/tw/animated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useCardStore, Card } from "../store/useCardStore";
@@ -96,7 +96,7 @@ function CardFace({
 }
 
 export default function Index() {
-  const insets = useSafeAreaInsets();
+
   const { cards, setCards } = useCardStore();
   const router = useRouter();
   const { t } = useTranslation();
@@ -278,9 +278,9 @@ export default function Index() {
   });
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <View className="flex-row items-center justify-between mb-6 mt-2 px-4">
+      <View className="flex-row items-center justify-between mb-6 pt-6 px-4">
         <View className="flex-row items-center">
           <Ionicons name="card" size={32} color={foreground} />
           <Text className="text-3xl font-bold ml-3 text-foreground">

@@ -1,4 +1,4 @@
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -9,7 +9,7 @@ import { useSettingsStore } from "../store/useSettingsStore";
 import Constants from "expo-constants";
 
 export default function Settings() {
-  const insets = useSafeAreaInsets();
+
   const router = useRouter();
   const { t } = useTranslation();
   const { theme, setTheme } = useSettingsStore();
@@ -30,10 +30,10 @@ export default function Settings() {
   ];
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar style={isDark ? "light" : "dark"} />
 
-      <View className="flex-row items-center mb-6 mt-2 px-4">
+      <View className="flex-row items-center mb-6 pt-6 px-4">
         <TouchableOpacity
           onPress={() => router.back()}
           className="mr-3 p-1"

@@ -6,14 +6,40 @@
 @media android {
   :root {
     --font-mono: monospace;
-    --font-sans: normal;
+    --font-sans: Quicksand_400Regular;
+    --font-sans-light: Quicksand_300Light;
+    --font-sans-medium: Quicksand_500Medium;
+    --font-sans-semibold: Quicksand_600SemiBold;
+    --font-sans-bold: Quicksand_700Bold;
   }
 }
 
 @media ios {
   :root {
     --font-mono: ui-monospace;
-    --font-sans: system-ui;
+    --font-sans: Quicksand_400Regular;
+    --font-sans-light: Quicksand_300Light;
+    --font-sans-medium: Quicksand_500Medium;
+    --font-sans-semibold: Quicksand_600SemiBold;
+    --font-sans-bold: Quicksand_700Bold;
+  }
+}
+
+@layer base {
+  .font-light {
+    font-family: Quicksand_300Light;
+  }
+  .font-normal {
+    font-family: Quicksand_400Regular;
+  }
+  .font-medium {
+    font-family: Quicksand_500Medium;
+  }
+  .font-semibold {
+    font-family: Quicksand_600SemiBold;
+  }
+  .font-bold {
+    font-family: Quicksand_700Bold;
   }
 }
 

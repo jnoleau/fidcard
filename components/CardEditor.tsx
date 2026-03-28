@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
 import { useSharedValue, runOnJS } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import CodeDisplay from "./CodeDisplay";
 
 interface CardEditorProps {
@@ -38,7 +38,7 @@ export default function CardEditor({
   onSave,
   onCancel,
 }: CardEditorProps) {
-  const insets = useSafeAreaInsets();
+
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
   const foreground = useCSSVariable("--color-foreground");
@@ -91,7 +91,7 @@ export default function CardEditor({
   };
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <View className="px-4 py-4 flex-row items-center border-b border-border">
         <TouchableOpacity
@@ -206,7 +206,7 @@ export default function CardEditor({
                     prev === "barcode" ? "qrcode" : "barcode",
                   )
                 }
-                className="p-2 bg-background rounded-md ml-2"
+                className="w-8 h-8 items-center justify-center bg-background rounded-md ml-2"
                 accessibilityLabel={t("edit.toggle_format")}
                 accessibilityRole="button"
               >

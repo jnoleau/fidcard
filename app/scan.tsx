@@ -9,13 +9,13 @@ import { StatusBar } from "expo-status-bar";
 import { View, Text, TouchableOpacity, useCSSVariable } from "../components/tw";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { useTranslation } from "react-i18next";
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
+
   const [scanned, setScanned] = useState(false);
   const isProcessing = useRef(false);
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ export default function ScanScreen() {
 
   if (!permission.granted) {
     return (
-      <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="flex-1 bg-background">
         <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
         <View className="flex-1 justify-center items-center p-5">
           <Text className="text-center mb-5 text-lg text-card-foreground">
@@ -79,7 +79,7 @@ export default function ScanScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
 
       {/* Header */}

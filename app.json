@@ -46,7 +46,8 @@
           "cameraPermission": "Allow Fidcard to access your camera to scan loyalty cards."
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
