@@ -1,5 +1,12 @@
 import { Alert } from "react-native";
-import { View, Text, TouchableOpacity, Link, useCSSVariable, Pressable } from "../components/tw";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Link,
+  useCSSVariable,
+  Pressable,
+} from "../components/tw";
 import { Animated } from "../components/tw/animated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -9,7 +16,14 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useAnimatedStyle, useSharedValue, withSpring, runOnJS, LinearTransition, Easing } from "react-native-reanimated";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  runOnJS,
+  LinearTransition,
+  Easing,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { SortableCard } from "../components/SortableCard";
 import {
@@ -56,7 +70,15 @@ function triggerHaptic() {
   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 }
 
-function CardFace({ card, onPress, disabled }: { card: Card; onPress: () => void; disabled: boolean }) {
+function CardFace({
+  card,
+  onPress,
+  disabled,
+}: {
+  card: Card;
+  onPress: () => void;
+  disabled: boolean;
+}) {
   return (
     <TouchableOpacity
       className="w-full h-32 rounded-xl p-4 justify-between shadow-sm"
@@ -169,14 +191,18 @@ export default function Index() {
   );
 
   const activeCard = activeId
-    ? localCards.find((card) => card.id === activeId) ?? null
+    ? (localCards.find((card) => card.id === activeId) ?? null)
     : null;
 
   const pan = Gesture.Pan()
     .minDistance(1)
     .shouldCancelWhenOutside(false)
     .onStart((event) => {
-      const touchedIndex = getCardIndexAtPoint(event.x, event.y, cardsCount.value);
+      const touchedIndex = getCardIndexAtPoint(
+        event.x,
+        event.y,
+        cardsCount.value,
+      );
       if (touchedIndex === -1) {
         dragSlotIndex.value = -1;
         return;
