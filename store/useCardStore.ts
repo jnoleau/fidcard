@@ -66,9 +66,8 @@ const defaultCards: Card[] = [
 export const useCardStore = create<CardState>()(
   persist(
     (set) => ({
-      cards: defaultCards,
-      addCard: (card) =>
-        set((state) => ({ cards: [...state.cards, card] })),
+      cards: !__DEV__ ? defaultCards : [],
+      addCard: (card) => set((state) => ({ cards: [...state.cards, card] })),
       removeCard: (id) =>
         set((state) => ({ cards: state.cards.filter((c) => c.id !== id) })),
       updateCard: (id, updates) =>
