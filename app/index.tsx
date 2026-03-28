@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useCardStore, Card } from "../store/useCardStore";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useAnimatedStyle, useSharedValue, withSpring, runOnJS } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
@@ -81,6 +81,7 @@ export default function Index() {
   const [isEditing, setIsEditing] = useState(false);
   const [localCards, setLocalCards] = useState<Card[]>(cards);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const suppressedOpenIdRef = useRef<string | null>(null);
 
   const foreground = useCSSVariable("--color-foreground");
   const success = useCSSVariable("--color-success");
@@ -121,6 +122,7 @@ export default function Index() {
     (index: number) => {
       const card = localCards[index];
       if (!card) return;
+      suppressedOpenIdRef.current = card.id;
       setIsEditing(true);
       setActiveId(card.id);
     },
@@ -129,6 +131,9 @@ export default function Index() {
 
   const finishDrag = useCallback(() => {
     setActiveId(null);
+    requestAnimationFrame(() => {
+      suppressedOpenIdRef.current = null;
+    });
   }, []);
 
   const saveOrder = useCallback(() => {
@@ -286,7 +291,13 @@ export default function Index() {
                   >
                     <CardFace
                       card={card}
-                      onPress={() => router.push(`/edit/${card.id}`)}
+                      onPress={() => {
+                        if (suppressedOpenIdRef.current === card.id) {
+                          suppressedOpenIdRef.current = null;
+                          return;
+                        }
+                        router.push(`/edit/${card.id}`);
+                      }}
                       disabled={isEditing}
                     />
                   </SortableCard>
