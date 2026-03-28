@@ -63,7 +63,6 @@ function SortableCardInner({
 
   return (
     <Animated.View
-      className="mb-4"
       style={animatedStyle}
       layout={LinearTransition.duration(250).easing(Easing.out(Easing.quad))}
     >

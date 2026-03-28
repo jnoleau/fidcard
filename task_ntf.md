@@ -3,11 +3,8 @@ Not to forget to
 - Le splash screen
 - les vector icons ne se montent pas tout de suite ?
 - le color picker dans un bottom sheet ?
-- le color picker a besoin d'internet ?
-- mode dark
-- améliorer le qr/bar code display condition
+- mode dark + version dans une page parametre
 - eas build dev
-- le store pour les cartes en asyncstorage ?
 - le partage via une url ?
 - font quicksand
 - rafactor pour utiliser Tailwind de partout

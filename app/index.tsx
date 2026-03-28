@@ -283,7 +283,7 @@ export default function Index() {
           <GestureDetector gesture={pan}>
             <View className="relative flex-row flex-wrap justify-between">
               {localCards.map((card) => (
-                <View key={card.id} className="w-[48%]">
+                <View key={card.id} className="w-[48%] mb-4">
                   <SortableCard
                     isEditing={isEditing}
                     isActive={activeId === card.id}
