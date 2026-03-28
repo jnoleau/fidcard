@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert, useColorScheme } from "react-native";
 import {
   View,
   Text,
@@ -15,7 +15,6 @@ import { useCardStore, Card } from "../store/useCardStore";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useColorScheme } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   useAnimatedStyle,

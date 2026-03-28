@@ -4,14 +4,13 @@ import { Stack } from "expo-router";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ErrorBoundary from "../components/ErrorBoundary";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance } from "react-native";
 import { useSettingsStore } from "../store/useSettingsStore";
 import { useEffect } from "react";
 import { useCSSVariable } from "../components/tw";
 
 export default function RootLayout() {
   const { theme } = useSettingsStore();
-  const colorScheme = useColorScheme();
   const background = useCSSVariable("--color-background");
 
   useEffect(() => {
