@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text , useCSSVariable } from "./tw";
+import { View, Text, useCSSVariable } from "./tw";
 import QRCode from "react-native-qrcode-svg";
 import { Barcode } from "expo-barcode-generator";
 import { Ionicons } from "@expo/vector-icons";
@@ -55,6 +55,7 @@ function CodeDisplay({ value, format }: CodeDisplayProps) {
               height: 100,
               displayValue: false,
             }}
+            style={{ color: "white" }}
           />
           <Text className="mt-2 text-muted font-medium tracking-widest">
             {value}

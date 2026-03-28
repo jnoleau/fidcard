@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Modal , useCSSVariable } from "./tw";
+import { useColorScheme } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  useCSSVariable,
+} from "./tw";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -32,6 +40,7 @@ export default function CardEditor({
 }: CardEditorProps) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const colorScheme = useColorScheme();
   const foreground = useCSSVariable("--color-foreground");
   const muted = useCSSVariable("--color-muted");
 
@@ -82,8 +91,8 @@ export default function CardEditor({
   };
 
   return (
-    <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
-      <StatusBar style="dark" />
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <View className="px-4 py-4 flex-row items-center border-b border-border">
         <TouchableOpacity
           onPress={onCancel}
@@ -142,7 +151,7 @@ export default function CardEditor({
               className={`flex-row items-center rounded-lg border ${errors.name ? "border-destructive" : "border-border"} pr-3`}
             >
               <TextInput
-                className="flex-1 p-4"
+                className="flex-1 p-4 text-foreground"
                 value={name}
                 selectTextOnFocus
                 autoCorrect={false}
@@ -152,6 +161,7 @@ export default function CardEditor({
                   if (errors.name) setErrors({ ...errors, name: undefined });
                 }}
                 placeholder={t("edit.brand_placeholder")}
+                placeholderTextColor={muted}
                 accessibilityLabel={t("edit.brand_label")}
               />
               <TouchableOpacity
@@ -177,7 +187,7 @@ export default function CardEditor({
               className={`flex-row items-center rounded-lg border ${errors.value ? "border-destructive" : "border-border"} pr-3`}
             >
               <TextInput
-                className="flex-1 p-4"
+                className="flex-1 p-4 text-foreground"
                 value={value}
                 selectTextOnFocus
                 autoCorrect={false}
@@ -187,6 +197,7 @@ export default function CardEditor({
                   if (errors.value) setErrors({ ...errors, value: undefined });
                 }}
                 placeholder={t("edit.value_placeholder")}
+                placeholderTextColor={muted}
                 accessibilityLabel={t("edit.value_label")}
               />
               <TouchableOpacity
@@ -201,9 +212,7 @@ export default function CardEditor({
               >
                 <Ionicons
                   name={
-                    format === "barcode"
-                      ? "barcode-outline"
-                      : "qr-code-outline"
+                    format === "barcode" ? "barcode-outline" : "qr-code-outline"
                   }
                   size={24}
                   color={muted}
@@ -221,7 +230,7 @@ export default function CardEditor({
 
       <Modal visible={showColorPicker} animationType="slide" transparent={true}>
         <View className="flex-1 justify-end">
-          <View className="bg-white p-6 rounded-t-3xl shadow-xl">
+          <View className="bg-card p-6 rounded-t-3xl shadow-xl">
             <View className="flex-row justify-between items-center mb-6">
               <TouchableOpacity
                 onPress={handleCancelColor}

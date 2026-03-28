@@ -36,7 +36,7 @@ export default function EditCard() {
     initialFormat === undefined
   ) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center bg-background">
         <Text className="text-muted">Card not found</Text>
       </View>
     );

@@ -15,6 +15,7 @@ import { useCardStore, Card } from "../store/useCardStore";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useColorScheme } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   useAnimatedStyle,
@@ -104,6 +105,8 @@ export default function Index() {
   const [localCards, setLocalCards] = useState<Card[]>(cards);
   const [activeId, setActiveId] = useState<string | null>(null);
   const suppressedOpenIdRef = useRef<string | null>(null);
+
+  const colorScheme = useColorScheme();
 
   const foreground = useCSSVariable("--color-foreground");
   const success = useCSSVariable("--color-success");
@@ -277,7 +280,7 @@ export default function Index() {
 
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-      <StatusBar style="dark" />
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <View className="flex-row items-center justify-between mb-6 mt-2 px-4">
         <View className="flex-row items-center">
           <Ionicons name="card" size={32} color={foreground} />
@@ -285,13 +288,21 @@ export default function Index() {
             {t("home.title")}
           </Text>
         </View>
-        {isEditing && (
+        {isEditing ? (
           <TouchableOpacity
             onPress={saveOrder}
             accessibilityLabel={t("common.save")}
             accessibilityRole="button"
           >
             <Ionicons name="checkmark-circle" size={32} color={success} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => router.push("/settings")}
+            accessibilityLabel={t("settings.title")}
+            accessibilityRole="button"
+          >
+            <Ionicons name="settings-outline" size={26} color={muted} />
           </TouchableOpacity>
         )}
       </View>

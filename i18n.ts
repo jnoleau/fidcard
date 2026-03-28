@@ -37,6 +37,14 @@ const en = {
     grant_permission: "Grant Permission",
     manual_button: "Enter Manually",
   },
+  settings: {
+    title: "Settings",
+    theme: "Appearance",
+    theme_light: "Light",
+    theme_dark: "Dark",
+    theme_system: "System",
+    version: "Version",
+  },
 };
 
 const fr = {
@@ -73,6 +81,14 @@ const fr = {
       "Nous avons besoin de la permission pour utiliser la caméra",
     grant_permission: "Autoriser l'accès",
     manual_button: "Saisir manuellement",
+  },
+  settings: {
+    title: "Paramètres",
+    theme: "Apparence",
+    theme_light: "Clair",
+    theme_dark: "Sombre",
+    theme_system: "Système",
+    version: "Version",
   },
 };
 

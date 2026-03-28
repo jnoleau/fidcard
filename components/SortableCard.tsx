@@ -65,7 +65,7 @@ function SortableCardInner({
       {isEditing && !isActive && (
         <TouchableOpacity
           onPress={onDelete}
-          className="absolute -top-2 -left-2 z-50 bg-white rounded-xl"
+          className="absolute -top-2 -left-2 z-50 bg-card rounded-xl"
           activeOpacity={0.7}
           accessibilityLabel="Delete card"
           accessibilityRole="button"

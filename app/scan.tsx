@@ -4,8 +4,9 @@ import {
   BarcodeScanningResult,
 } from "expo-camera";
 import { useState, useRef } from "react";
-import { StatusBar } from "react-native";
-import { View, Text, TouchableOpacity } from "../components/tw";
+import { useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { View, Text, TouchableOpacity, useCSSVariable } from "../components/tw";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,16 +19,18 @@ export default function ScanScreen() {
   const [scanned, setScanned] = useState(false);
   const isProcessing = useRef(false);
   const { t } = useTranslation();
+  const colorScheme = useColorScheme();
+  const foreground = useCSSVariable("--color-foreground");
 
   if (!permission) {
-    return <View className="flex-1" />;
+    return <View className="flex-1 bg-background" />;
   }
 
   if (!permission.granted) {
     return (
-      <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
-        <StatusBar barStyle="dark-content" />
-        <View className="flex-1 justify-center items-center bg-background p-5">
+      <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+        <View className="flex-1 justify-center items-center p-5">
           <Text className="text-center mb-5 text-lg text-card-foreground">
             {t("scan.permission_request")}
           </Text>
@@ -76,8 +79,8 @@ export default function ScanScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
-      <StatusBar barStyle="dark-content" />
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
 
       {/* Header */}
       <View className="flex-row justify-between items-center px-4 py-3">
@@ -87,7 +90,7 @@ export default function ScanScreen() {
           accessibilityLabel={t("common.close")}
           accessibilityRole="button"
         >
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
+          <Ionicons name="arrow-back" size={24} color={foreground} />
         </TouchableOpacity>
         <Text className="text-lg font-semibold text-card-foreground">
           {t("scan.title")}
@@ -98,7 +101,7 @@ export default function ScanScreen() {
           accessibilityLabel={t("common.close")}
           accessibilityRole="button"
         >
-          <Ionicons name="close" size={24} color="#1f2937" />
+          <Ionicons name="close" size={24} color={foreground} />
         </TouchableOpacity>
       </View>
 
@@ -141,7 +144,7 @@ export default function ScanScreen() {
 
         <View className="items-center w-full px-8">
           <TouchableOpacity
-            className="bg-white border border-border py-4 px-6 rounded-full w-full items-center shadow-sm"
+            className="bg-card border border-border py-4 px-6 rounded-full w-full items-center shadow-sm"
             onPress={() => {
               const randomColor =
                 "#" +
