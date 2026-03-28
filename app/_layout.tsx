@@ -4,12 +4,15 @@ import { Stack } from "expo-router";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ErrorBoundary from "../components/ErrorBoundary";
-import { Appearance } from "react-native";
+import { Appearance, useColorScheme } from "react-native";
 import { useSettingsStore } from "../store/useSettingsStore";
 import { useEffect } from "react";
+import { useCSSVariable } from "../components/tw";
 
 export default function RootLayout() {
   const { theme } = useSettingsStore();
+  const colorScheme = useColorScheme();
+  const background = useCSSVariable("--color-background");
 
   useEffect(() => {
     if (theme === "system") {
@@ -20,10 +23,15 @@ export default function RootLayout() {
   }, [theme]);
 
   return (
-    <GestureHandlerRootView className="flex-1">
+    <GestureHandlerRootView className="flex-1 bg-background">
       <ErrorBoundary>
         <KeyboardProvider>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: background },
+            }}
+          >
             <Stack.Screen name="index" />
             <Stack.Screen name="scan" options={{ presentation: "modal" }} />
             <Stack.Screen name="settings" />
