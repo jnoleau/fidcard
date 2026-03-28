@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import * as Brightness from "expo-brightness";
 import { useCardStore } from "../../store/useCardStore";
 import CardEditor from "../../components/CardEditor";
 import { View, Text } from "../../components/tw";
@@ -25,6 +27,24 @@ export default function EditCard() {
     value: paramValue,
     format: paramFormat,
   };
+
+  const isExistingCard = card.id !== undefined;
+  const previousBrightness = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!isExistingCard) return;
+
+    (async () => {
+      previousBrightness.current = await Brightness.getBrightnessAsync();
+      await Brightness.setBrightnessAsync(1);
+    })();
+
+    return () => {
+      if (previousBrightness.current !== null) {
+        Brightness.setBrightnessAsync(previousBrightness.current);
+      }
+    };
+  }, [isExistingCard]);
 
   const initialColor = card.color;
   const initialValue = card.value;
