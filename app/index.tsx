@@ -9,7 +9,7 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useAnimatedStyle, useSharedValue, withSpring, runOnJS } from "react-native-reanimated";
+import { useAnimatedStyle, useSharedValue, withSpring, runOnJS, LinearTransition, Easing } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { SortableCard } from "../components/SortableCard";
 import {
@@ -281,46 +281,75 @@ export default function Index() {
           disabled={!isEditing || !!activeId}
         >
           <GestureDetector gesture={pan}>
-            <View className="relative flex-row flex-wrap justify-between">
-              {localCards.map((card) => (
-                <View key={card.id} className="w-[48%] mb-4">
-                  <SortableCard
-                    isEditing={isEditing}
-                    isActive={activeId === card.id}
-                    onDelete={() => handleDelete(card)}
+            <View
+              className="relative"
+              style={{
+                height:
+                  Math.ceil((localCards.length + 1) / COLUMNS) * ROW_HEIGHT,
+              }}
+            >
+              {localCards.map((card, index) => {
+                const pos = getPosition(index);
+                return (
+                  <Animated.View
+                    key={card.id}
+                    layout={LinearTransition.duration(250).easing(
+                      Easing.out(Easing.quad),
+                    )}
+                    style={{
+                      position: "absolute",
+                      left: pos.x,
+                      top: pos.y,
+                      width: CARD_WIDTH,
+                    }}
                   >
-                    <CardFace
-                      card={card}
-                      onPress={() => {
-                        if (suppressedOpenIdRef.current === card.id) {
-                          suppressedOpenIdRef.current = null;
-                          return;
-                        }
-                        router.push(`/edit/${card.id}`);
-                      }}
-                      disabled={isEditing}
-                    />
-                  </SortableCard>
-                </View>
-              ))}
+                    <SortableCard
+                      isEditing={isEditing}
+                      isActive={activeId === card.id}
+                      onDelete={() => handleDelete(card)}
+                    >
+                      <CardFace
+                        card={card}
+                        onPress={() => {
+                          if (suppressedOpenIdRef.current === card.id) {
+                            suppressedOpenIdRef.current = null;
+                            return;
+                          }
+                          router.push(`/edit/${card.id}`);
+                        }}
+                        disabled={isEditing}
+                      />
+                    </SortableCard>
+                  </Animated.View>
+                );
+              })}
 
-              <Link href="/scan" asChild disabled={isEditing}>
-                <TouchableOpacity
-                  className={`w-[48%] h-32 rounded-xl p-4 justify-center items-center mb-4 border-2 border-dashed border-border bg-background ${isEditing ? "opacity-50" : ""}`}
-                  disabled={isEditing}
-                  accessibilityLabel={t("home.scan_card")}
-                  accessibilityRole="button"
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={40}
-                    color={muted}
-                  />
-                  <Text className="text-muted-foreground font-medium mt-2">
-                    {t("home.scan_card")}
-                  </Text>
-                </TouchableOpacity>
-              </Link>
+              <View
+                style={{
+                  position: "absolute",
+                  left: getPosition(localCards.length).x,
+                  top: getPosition(localCards.length).y,
+                  width: CARD_WIDTH,
+                }}
+              >
+                <Link href="/scan" asChild disabled={isEditing}>
+                  <TouchableOpacity
+                    className={`h-32 rounded-xl p-4 justify-center items-center border-2 border-dashed border-border bg-background ${isEditing ? "opacity-50" : ""}`}
+                    disabled={isEditing}
+                    accessibilityLabel={t("home.scan_card")}
+                    accessibilityRole="button"
+                  >
+                    <Ionicons
+                      name="add-circle-outline"
+                      size={40}
+                      color={muted}
+                    />
+                    <Text className="text-muted-foreground font-medium mt-2">
+                      {t("home.scan_card")}
+                    </Text>
+                  </TouchableOpacity>
+                </Link>
+              </View>
 
               {activeCard && (
                 <Animated.View

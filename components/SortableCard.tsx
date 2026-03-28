@@ -8,8 +8,6 @@ import {
   withSequence,
   withTiming,
   withDelay,
-  LinearTransition,
-  Easing,
 } from "react-native-reanimated";
 import { Animated } from "./tw/animated";
 import { WOBBLE_DURATION } from "../constants";
@@ -62,10 +60,7 @@ function SortableCardInner({
   }));
 
   return (
-    <Animated.View
-      style={animatedStyle}
-      layout={LinearTransition.duration(250).easing(Easing.out(Easing.quad))}
-    >
+    <Animated.View style={animatedStyle}>
       {children}
       {isEditing && !isActive && (
         <TouchableOpacity
