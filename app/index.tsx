@@ -370,7 +370,7 @@ export default function Index() {
               >
                 <Link href="/scan" asChild disabled={isEditing}>
                   <TouchableOpacity
-                    className={`h-32 rounded-xl p-4 justify-center items-center border-2 border-dashed border-border bg-background ${isEditing ? "opacity-50" : ""}`}
+                    className={`h-32 rounded-xl p-4 justify-center items-center border-2 border-dashed border-foreground/30 bg-background ${isEditing ? "opacity-50" : ""}`}
                     disabled={isEditing}
                     accessibilityLabel={t("home.scan_card")}
                     accessibilityRole="button"
@@ -378,9 +378,9 @@ export default function Index() {
                     <Ionicons
                       name="add-circle-outline"
                       size={40}
-                      color={muted}
+                      color={foreground}
                     />
-                    <Text className="text-muted-foreground font-medium mt-2">
+                    <Text className="text-foreground font-medium mt-2">
                       {t("home.scan_card")}
                     </Text>
                   </TouchableOpacity>
