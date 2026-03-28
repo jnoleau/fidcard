@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { deviceLanguage } from "../i18n";
 
 export interface Card {
   id: string;
@@ -18,7 +19,7 @@ interface CardState {
   setCards: (cards: Card[]) => void;
 }
 
-const defaultCards: Card[] = [
+const frDefaultCards: Card[] = [
   {
     id: "1",
     name: "Auchan",
@@ -63,10 +64,57 @@ const defaultCards: Card[] = [
   },
 ];
 
+const usDefaultCards: Card[] = [
+  {
+    id: "1",
+    name: "Walmart",
+    color: "#0071ce",
+    value: "321654987",
+    format: "barcode",
+  },
+  {
+    id: "2",
+    name: "Starbucks",
+    color: "#00704a",
+    value: "654321987",
+    format: "barcode",
+  },
+  {
+    id: "3",
+    name: "Target",
+    color: "#cc0000",
+    value: "123456789",
+    format: "barcode",
+  },
+  {
+    id: "4",
+    name: "Home Depot",
+    color: "#f96302",
+    value: "789123456",
+    format: "barcode",
+  },
+  {
+    id: "5",
+    name: "Lowe's",
+    color: "#004990",
+    value: "456789123",
+    format: "barcode",
+  },
+  {
+    id: "6",
+    name: "Dollar General",
+    color: "#fcd700",
+    value: "987654321",
+    format: "barcode",
+  },
+];
+
+const defaultCards = deviceLanguage === "fr" ? frDefaultCards : usDefaultCards;
+
 export const useCardStore = create<CardState>()(
   persist(
     (set) => ({
-      cards: !__DEV__ ? defaultCards : [],
+      cards: __DEV__ ? defaultCards : [],
       addCard: (card) => set((state) => ({ cards: [...state.cards, card] })),
       removeCard: (id) =>
         set((state) => ({ cards: state.cards.filter((c) => c.id !== id) })),

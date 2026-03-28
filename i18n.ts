@@ -97,8 +97,9 @@ const resources = {
   fr: { translation: fr },
 };
 
-const deviceLanguage = getLocales()[0]?.languageCode ?? "en";
+export const deviceLanguage = getLocales()[0]?.languageCode ?? "en";
 
+// eslint-disable-next-line import/no-named-as-default-member
 i18n.use(initReactI18next).init({
   resources,
   lng: deviceLanguage, // default language to use.
