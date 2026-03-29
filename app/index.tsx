@@ -32,6 +32,7 @@ import {
   COLUMNS,
   LONG_PRESS_DURATION,
   ROW_HEIGHT,
+  PADDING,
 } from "../constants";
 
 const CARD_HEIGHT = ROW_HEIGHT - 16;
@@ -279,7 +280,7 @@ export default function Index() {
   return (
     <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <View className="flex-row items-center justify-between mb-6 pt-6 px-4">
+      <View className="flex-row items-center justify-between mb-6 pt-6" style={{ paddingHorizontal: PADDING }}>
         <View className="flex-row items-center">
           <Ionicons name="card" size={32} color={foreground} />
           <Text className="text-3xl font-bold ml-3 text-foreground">
