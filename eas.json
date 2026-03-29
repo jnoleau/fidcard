@@ -14,6 +14,12 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "julien@devanco.com",
+        "ascAppId": "6761309130",
+        "appleTeamId": "8Y4NFJN9B3"
+      }
+    }
   }
 }
