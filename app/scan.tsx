@@ -63,6 +63,22 @@ export default function ScanScreen() {
     isProcessing.current = true;
     setScanned(true);
 
+    console.log("Scanned barcode:", { type, data });
+
+    // Restore leading zeros stripped by the scanner for fixed-length barcode formats
+    let value = data;
+    const expectedLengths: Partial<Record<string, number>> = {
+      ean13: 13,
+      ean8: 8,
+      upc_a: 12,
+      upc_e: 8,
+      itf14: 14,
+    };
+    const expected = expectedLengths[type];
+    if (expected && value.length < expected) {
+      value = value.padStart(expected, "0");
+    }
+
     const randomColor =
       "#" +
       Math.floor(Math.random() * 16777215)
@@ -74,7 +90,7 @@ export default function ScanScreen() {
     router.dismiss();
     router.push({
       pathname: "/edit/[id]",
-      params: { id: "new", value: data, color: randomColor, format },
+      params: { id: "new", value, color: randomColor, format },
     });
   };
 
