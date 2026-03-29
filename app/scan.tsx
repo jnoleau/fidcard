@@ -63,8 +63,6 @@ export default function ScanScreen() {
     isProcessing.current = true;
     setScanned(true);
 
-    console.log("Scanned barcode:", { type, data });
-
     // Restore leading zeros stripped by the scanner for fixed-length barcode formats
     let value = data;
     const expectedLengths: Partial<Record<string, number>> = {
