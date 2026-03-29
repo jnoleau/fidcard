@@ -42,7 +42,7 @@ function SortableCardInner({
   isActive,
   onDelete,
 }: SortableCardProps) {
-  const destructive = useCSSVariable("--color-destructive");
+  const foreground = useCSSVariable("--color-foreground");
   const rotation = useSharedValue(0);
   const wobbleDelay = useRef(Math.random() * 200).current;
 
@@ -70,7 +70,7 @@ function SortableCardInner({
           accessibilityLabel="Delete card"
           accessibilityRole="button"
         >
-          <Ionicons name="remove-circle" size={28} color={destructive} />
+          <Ionicons name="remove-circle" size={28} color={foreground} />
         </TouchableOpacity>
       )}
     </Animated.View>

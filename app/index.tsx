@@ -108,7 +108,6 @@ export default function Index() {
   const colorScheme = useColorScheme();
 
   const foreground = useCSSVariable("--color-foreground");
-  const success = useCSSVariable("--color-success");
   const muted = useCSSVariable("--color-muted-foreground");
 
   const dragSlotIndex = useSharedValue(-1);
@@ -293,7 +292,7 @@ export default function Index() {
             accessibilityLabel={t("common.save")}
             accessibilityRole="button"
           >
-            <Ionicons name="checkmark-circle" size={32} color={success} />
+            <Ionicons name="checkmark-circle" size={32} color={foreground} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
