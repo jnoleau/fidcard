@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import { getLocales } from "expo-localization";
 import { initReactI18next } from "react-i18next";
 import "intl-pluralrules";
 
@@ -96,7 +97,7 @@ const resources = {
   fr: { translation: fr },
 };
 
-export const deviceLanguage = "en";
+export const deviceLanguage = getLocales()[0]?.languageCode ?? "en";
 
 // eslint-disable-next-line import/no-named-as-default-member
 i18n.use(initReactI18next).init({
