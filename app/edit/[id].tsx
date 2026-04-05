@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { AppState } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Brightness from "expo-brightness";
 import { useCardStore } from "../../store/useCardStore";
@@ -39,7 +40,18 @@ export default function EditCard() {
       await Brightness.setBrightnessAsync(1);
     })();
 
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        Brightness.setBrightnessAsync(1);
+      } else if (nextAppState === "background" || nextAppState === "inactive") {
+        if (previousBrightness.current !== null) {
+          Brightness.setBrightnessAsync(previousBrightness.current);
+        }
+      }
+    });
+
     return () => {
+      subscription.remove();
       if (previousBrightness.current !== null) {
         Brightness.setBrightnessAsync(previousBrightness.current);
       }
