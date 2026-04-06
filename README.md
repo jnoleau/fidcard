@@ -1,50 +1,73 @@
-# Welcome to your Expo app 👋
+# Fidcard
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Simple loyalty card wallet. All your loyalty cards in one app. No account, no ads, no tracking, open source. Just scan and go.
 
-## Get started
+## About
 
-1. Install dependencies
+Fidcard is a straightforward loyalty card app that does one thing and does it well: store all your loyalty cards in one place.
 
-   ```bash
-   npm install
-   ```
+Scan your physical loyalty cards using your camera or enter the number manually. When you need to use a card at checkout, just open Fidcard and show the barcode or QR code on your screen — the brightness is automatically maximized for easy scanning.
 
-2. Start the app
+**Why Fidcard?**
 
-   ```bash
-   npx expo start
-   ```
+- **Dead simple.** No account needed. No sign-up. No email. Just open the app and start adding your cards.
+- **No ads. No tracking.** Your data stays on your device. Period. We don't collect anything.
+- **Open source.** The code is fully transparent and publicly available. You can verify exactly what the app does.
 
-In the output, you'll find options to open the app in a
+## Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Scan barcodes and QR codes with your camera
+- Supports all major barcode formats (Code128, EAN-13, EAN-8, QR, PDF417, Aztec, and more)
+- Customize each card with a name and color for easy identification
+- Reorder your cards with drag and drop
+- Manual entry if scanning doesn't work
+- Light, dark, and system theme support
+- Available in English and French
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Tech Stack
 
-## Get a fresh project
+- [Expo](https://expo.dev/) / React Native
+- TypeScript
+- [Expo Router](https://docs.expo.dev/router/introduction/) (file-based routing)
+- [NativeWind](https://www.nativewind.dev/) (Tailwind CSS)
+- [Zustand](https://github.com/pmndrs/zustand) (state management)
 
-When you're ready, run:
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- [pnpm](https://pnpm.io/)
+
+### Install
 
 ```bash
-npm run reset-project
+pnpm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Run
 
-## Learn more
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Then open the app on (as you prefer):
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Expo Go](https://expo.dev/go)
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 
-## Join the community
+## Project Structure
 
-Join our community of developers creating universal apps.
+```
+app/          Routes and layouts (Expo Router)
+components/   Reusable UI components
+store/        Zustand stores
+lib/          Utilities
+assets/       Images and fonts
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## License
+
+[MIT](LICENSE)
