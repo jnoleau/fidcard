@@ -3,8 +3,8 @@ import {
   useCameraPermissions,
   BarcodeScanningResult,
 } from "expo-camera";
-import { useState, useRef } from "react";
-import { useColorScheme } from "react-native";
+import { useState, useRef, useEffect } from "react";
+import { useColorScheme, Linking } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { View, Text, TouchableOpacity, useCSSVariable } from "../components/tw";
 import { useRouter } from "expo-router";
@@ -22,6 +22,12 @@ export default function ScanScreen() {
   const colorScheme = useColorScheme();
   const foreground = useCSSVariable("--color-foreground");
 
+  useEffect(() => {
+    if (permission && !permission.granted && permission.canAskAgain) {
+      requestPermission();
+    }
+  }, [permission]);
+
   if (!permission) {
     return <View className="flex-1 bg-background" />;
   }
@@ -31,26 +37,45 @@ export default function ScanScreen() {
       <View className="flex-1 bg-background">
         <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
         <View className="flex-1 justify-center items-center p-5">
-          <Text className="text-center mb-5 text-lg text-card-foreground">
-            {t("scan.permission_request")}
+          <Ionicons name="camera-outline" size={48} color={foreground} />
+          <Text className="text-center mt-4 mb-6 text-lg text-card-foreground px-4">
+            {t("scan.permission_denied_message")}
           </Text>
           <TouchableOpacity
             className="bg-primary px-5 py-3 rounded-lg mb-3"
-            onPress={requestPermission}
-            accessibilityLabel={t("scan.grant_permission")}
+            onPress={() => Linking.openSettings()}
+            accessibilityLabel={t("scan.open_settings")}
             accessibilityRole="button"
           >
             <Text className="text-primary-foreground font-bold text-base">
-              {t("scan.grant_permission")}
+              {t("scan.open_settings")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="p-3"
-            onPress={() => router.back()}
-            accessibilityLabel={t("common.cancel")}
+            onPress={() => {
+              const randomColor =
+                "#" +
+                Math.floor(Math.random() * 16777215)
+                  .toString(16)
+                  .padStart(6, "0");
+              router.dismiss();
+              router.push({
+                pathname: "/edit/[id]",
+                params: {
+                  id: "new",
+                  value: "",
+                  color: randomColor,
+                  format: "qrcode",
+                },
+              });
+            }}
+            accessibilityLabel={t("scan.manual_button")}
             accessibilityRole="button"
           >
-            <Text className="text-muted text-base">{t("common.cancel")}</Text>
+            <Text className="text-muted text-base">
+              {t("scan.manual_button")}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
