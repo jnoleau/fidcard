@@ -22,6 +22,19 @@ export default function ScanScreen() {
   const colorScheme = useColorScheme();
   const foreground = useCSSVariable("--color-foreground");
 
+  const navigateToNewCard = (value = "", format: "qrcode" | "barcode" = "qrcode") => {
+    const randomColor =
+      "#" +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, "0");
+    router.dismiss();
+    router.push({
+      pathname: "/edit/[id]",
+      params: { id: "new", value, color: randomColor, format },
+    });
+  };
+
   useEffect(() => {
     if (permission && !permission.granted && permission.canAskAgain) {
       requestPermission();
@@ -53,23 +66,7 @@ export default function ScanScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             className="p-3"
-            onPress={() => {
-              const randomColor =
-                "#" +
-                Math.floor(Math.random() * 16777215)
-                  .toString(16)
-                  .padStart(6, "0");
-              router.dismiss();
-              router.push({
-                pathname: "/edit/[id]",
-                params: {
-                  id: "new",
-                  value: "",
-                  color: randomColor,
-                  format: "qrcode",
-                },
-              });
-            }}
+            onPress={() => navigateToNewCard()}
             accessibilityLabel={t("scan.manual_button")}
             accessibilityRole="button"
           >
@@ -102,19 +99,8 @@ export default function ScanScreen() {
       value = value.padStart(expected, "0");
     }
 
-    const randomColor =
-      "#" +
-      Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, "0");
-
     const format = type === "qr" ? "qrcode" : "barcode";
-
-    router.dismiss();
-    router.push({
-      pathname: "/edit/[id]",
-      params: { id: "new", value, color: randomColor, format },
-    });
+    navigateToNewCard(value, format);
   };
 
   return (
@@ -184,24 +170,7 @@ export default function ScanScreen() {
         <View className="items-center w-full px-8">
           <TouchableOpacity
             className="bg-card border border-border py-4 px-6 rounded-full w-full items-center shadow-sm"
-            onPress={() => {
-              const randomColor =
-                "#" +
-                Math.floor(Math.random() * 16777215)
-                  .toString(16)
-                  .padStart(6, "0");
-
-              router.dismiss();
-              router.push({
-                pathname: "/edit/[id]",
-                params: {
-                  id: "new",
-                  value: "",
-                  color: randomColor,
-                  format: "qrcode",
-                },
-              });
-            }}
+            onPress={() => navigateToNewCard()}
             accessibilityLabel={t("scan.manual_button")}
             accessibilityRole="button"
           >
