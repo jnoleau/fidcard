@@ -33,8 +33,9 @@ const en = {
     title: "Scan Barcode",
     instruction: "Place barcode in the frame",
     permission_denied: "Camera permission denied",
-    permission_request: "We need your permission to show the camera",
-    grant_permission: "Grant Permission",
+    permission_denied_message:
+      "Camera access is required to scan barcodes. You can enable it in Settings.",
+    open_settings: "Open Settings",
     manual_button: "Enter Manually",
   },
   settings: {
@@ -77,9 +78,9 @@ const fr = {
     title: "Scanner un code-barres",
     instruction: "Placez le code-barres dans le cadre",
     permission_denied: "Permission caméra refusée",
-    permission_request:
-      "Nous avons besoin de la permission pour utiliser la caméra",
-    grant_permission: "Autoriser l'accès",
+    permission_denied_message:
+      "L'accès à la caméra est nécessaire pour scanner les codes-barres. Vous pouvez l'activer dans les Réglages.",
+    open_settings: "Ouvrir les Réglages",
     manual_button: "Saisir manuellement",
   },
   settings: {
