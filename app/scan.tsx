@@ -22,7 +22,10 @@ export default function ScanScreen() {
   const colorScheme = useColorScheme();
   const foreground = useCSSVariable("--color-foreground");
 
-  const navigateToNewCard = (value = "", format: "qrcode" | "barcode" = "qrcode") => {
+  const navigateToNewCard = (
+    value = "",
+    format: "qrcode" | "barcode" = "qrcode",
+  ) => {
     const randomColor =
       "#" +
       Math.floor(Math.random() * 16777215)
@@ -39,7 +42,7 @@ export default function ScanScreen() {
     if (permission && !permission.granted && permission.canAskAgain) {
       requestPermission();
     }
-  }, [permission]);
+  }, [permission, requestPermission]);
 
   if (!permission) {
     return <View className="flex-1 bg-background" />;
