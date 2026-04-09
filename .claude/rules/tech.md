@@ -34,3 +34,6 @@ It utilizes **Expo Router** for navigation and **NativeWind** for styling, allow
   - `babel.config.js`: Babel configuration (includes NativeWind preset).
   - `metro.config.js`: Metro bundler configuration (with NativeWind support).
   - `tsconfig.json`: TypeScript configuration.
+
+  ## Code Style
+  - Always use `pnpm lint` to check for linting errors before committing code.
