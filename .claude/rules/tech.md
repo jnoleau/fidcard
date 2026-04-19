@@ -27,13 +27,15 @@ It utilizes **Expo Router** for navigation and **NativeWind** for styling, allow
   - `_layout.tsx`: The root layout file.
   - `index.tsx`: The entry screen.
 - **`store/`**: Contains Zustand stores for state management.
-- **`assets/`**: Stores static assets like images and fonts.
+- **`assets/`**: Stores static assets like images and fonts (shipped with the build).
+- **`design/`**: Design sources (SVGs used to generate PNG assets). Excluded from EAS uploads via `.easignore`.
 - **`components/`**: (Intended) Reusable UI components.
 - **Configuration Files**:
   - `tailwind.config.js`: Tailwind CSS configuration.
   - `babel.config.js`: Babel configuration (includes NativeWind preset).
   - `metro.config.js`: Metro bundler configuration (with NativeWind support).
   - `tsconfig.json`: TypeScript configuration.
+  - `.easignore`: Fully **replaces** `.gitignore` for EAS Build uploads (EAS does not merge them). Any new `.gitignore` rule must be duplicated here.
 
   ## Code Style
   - Always use `pnpm lint` to check for linting errors before committing code.
