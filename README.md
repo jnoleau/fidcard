@@ -1,5 +1,7 @@
 # Fidcard
 
+![Fidcard](design/play_en.png)
+
 Simple loyalty card wallet. All your loyalty cards in one app. No account, no ads, no tracking, open source. Just scan and go.
 
 ## About
