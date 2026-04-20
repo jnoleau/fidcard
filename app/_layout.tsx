@@ -3,6 +3,7 @@ import "../i18n";
 import { Stack } from "expo-router";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { Appearance } from "react-native";
 import { useSettingsStore } from "../store/useSettingsStore";
@@ -47,16 +48,18 @@ export default function RootLayout() {
     <GestureHandlerRootView className="flex-1" onLayout={onLayoutRootView}>
       <ErrorBoundary>
         <KeyboardProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: background, paddingTop: insets.top },
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="scan" options={{ presentation: "modal" }} />
-            <Stack.Screen name="settings" />
-          </Stack>
+          <BottomSheetModalProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: background, paddingTop: insets.top },
+              }}
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="scan" options={{ presentation: "modal" }} />
+              <Stack.Screen name="settings" />
+            </Stack>
+          </BottomSheetModalProvider>
         </KeyboardProvider>
       </ErrorBoundary>
     </GestureHandlerRootView>

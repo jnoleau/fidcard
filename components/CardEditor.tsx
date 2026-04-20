@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useColorScheme } from "react-native";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-  useCSSVariable,
-} from "./tw";
+import { View, Text, TextInput, TouchableOpacity, useCSSVariable } from "./tw";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
-import { useSharedValue, runOnJS } from "react-native-reanimated";
+import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { Animated } from "./tw/animated";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+  type BottomSheetBackdropProps,
+} from "@gorhom/bottom-sheet";
 
 import CodeDisplay from "./CodeDisplay";
 
@@ -38,11 +39,12 @@ export default function CardEditor({
   onSave,
   onCancel,
 }: CardEditorProps) {
-
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
   const foreground = useCSSVariable("--color-foreground");
   const muted = useCSSVariable("--color-muted");
+  const cardBg = useCSSVariable("--color-card");
 
   const [name, setName] = useState(initialValues.name);
   const [color, setColor] = useState(initialValues.color);
@@ -51,9 +53,26 @@ export default function CardEditor({
     initialValues.format,
   );
 
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [originalColor, setOriginalColor] = useState("");
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [pickerInitialColor, setPickerInitialColor] = useState(
+    color || "#ffffff",
+  );
   const pickerColor = useSharedValue(color || "#ffffff");
+
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.02}
+        style={[props.style, { top: insets.top + headerHeight }]}
+      />
+    ),
+    [headerHeight, insets.top],
+  );
 
   const [errors, setErrors] = useState<{ name?: string; value?: string }>({});
 
@@ -72,28 +91,22 @@ export default function CardEditor({
 
   const openColorPicker = () => {
     const currentColor = color || "#ffffff";
-    setOriginalColor(currentColor);
+    setPickerInitialColor(currentColor);
     pickerColor.value = currentColor;
-    setShowColorPicker(true);
+    bottomSheetRef.current?.present();
   };
 
-  const handleCancelColor = () => {
-    setColor(originalColor);
-    setShowColorPicker(false);
-  };
-
-  const handleConfirmColor = () => {
-    setShowColorPicker(false);
-  };
-
-  const onColorChange = (hex: string) => {
-    setColor(hex);
-  };
+  const cardBorderStyle = useAnimatedStyle(() => ({
+    borderColor: pickerColor.value,
+  }));
 
   return (
     <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <View className="px-4 py-4 flex-row items-center border-b border-border">
+      <View
+        className="px-4 py-4 flex-row items-center border-b border-border"
+        onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
+      >
         <TouchableOpacity
           onPress={onCancel}
           className="p-2 -ml-2 mr-2"
@@ -130,16 +143,15 @@ export default function CardEditor({
         bottomOffset={20}
       >
         <View className="mb-8 px-2">
-          <View
+          <Animated.View
             className="items-center justify-center bg-white rounded-2xl py-10 shadow-lg"
-            style={{
-              borderColor: color,
-              borderWidth: 4,
-              borderTopWidth: 40,
-            }}
+            style={[
+              { borderWidth: 4, borderTopWidth: 40 },
+              cardBorderStyle,
+            ]}
           >
             <CodeDisplay value={value || "123456"} format={format} />
-          </View>
+          </Animated.View>
         </View>
 
         <View className="gap-6">
@@ -228,54 +240,41 @@ export default function CardEditor({
         </View>
       </KeyboardAwareScrollView>
 
-      <Modal visible={showColorPicker} animationType="slide" transparent={true}>
-        <View className="flex-1 justify-end">
-          <View className="bg-card p-6 rounded-t-3xl shadow-xl">
-            <View className="flex-row justify-between items-center mb-6">
-              <TouchableOpacity
-                onPress={handleCancelColor}
-                className="px-4 py-2"
-                accessibilityLabel={t("common.cancel")}
-                accessibilityRole="button"
-              >
-                <Text className="text-destructive font-medium text-lg">
-                  {t("common.cancel")}
-                </Text>
-              </TouchableOpacity>
-
-              <Text className="text-xl font-bold text-foreground">
-                {t("edit.color_title")}
-              </Text>
-
-              <TouchableOpacity
-                onPress={handleConfirmColor}
-                className="bg-primary px-4 py-2 rounded-full"
-                accessibilityLabel={t("common.confirm")}
-                accessibilityRole="button"
-              >
-                <Text className="text-primary-foreground font-bold">
-                  {t("common.confirm")}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ height: 400 }}>
-              <ColorPicker
-                style={{ width: "100%", flex: 1, gap: 20 }}
-                value={color || "#ffffff"}
-                onChange={({ hex }) => {
-                  "worklet";
-                  pickerColor.value = hex;
-                  runOnJS(onColorChange)(hex);
-                }}
-              >
-                <Panel1 style={{ borderRadius: 16 }} />
-                <HueSlider style={{ borderRadius: 16, height: 40 }} />
-              </ColorPicker>
-            </View>
+      <BottomSheetModal
+        ref={bottomSheetRef}
+        enablePanDownToClose
+        enableDynamicSizing
+        backgroundStyle={{ backgroundColor: cardBg }}
+        handleIndicatorStyle={{ backgroundColor: muted }}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView
+          style={{ paddingHorizontal: 24, paddingBottom: 24 }}
+        >
+          <View className="items-center mb-6">
+            <Text className="text-xl font-bold text-foreground">
+              {t("edit.color_title")}
+            </Text>
           </View>
-        </View>
-      </Modal>
+
+          <View style={{ height: 320 }}>
+            <ColorPicker
+              style={{ width: "100%", flex: 1, gap: 20 }}
+              value={pickerInitialColor}
+              onChange={({ hex }) => {
+                "worklet";
+                pickerColor.value = hex;
+              }}
+              onCompleteJS={({ hex }) => {
+                setColor(hex);
+              }}
+            >
+              <Panel1 style={{ borderRadius: 16 }} />
+              <HueSlider style={{ borderRadius: 16, height: 40 }} />
+            </ColorPicker>
+          </View>
+        </BottomSheetView>
+      </BottomSheetModal>
     </View>
   );
 }
