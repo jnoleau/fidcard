@@ -1,8 +1,14 @@
 # Fidcard
 
+Simple loyalty card wallet. All your loyalty cards in one app. No account, no ads, no tracking, open source. Just scan and go.
+
 ![Fidcard](design/play_en.png)
 
-Simple loyalty card wallet. All your loyalty cards in one app. No account, no ads, no tracking, open source. Just scan and go.
+<p align="left">
+  <a href="https://apps.apple.com/fr/app/fidcard-cartes-de-fid%C3%A9lit%C3%A9/id6761309130"><img alt="Download on the App Store" src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1700000000" height="50" style="vertical-align: middle;"></a>
+  &nbsp;
+  <a href="https://play.google.com/store/apps/details?id=com.devanco.basic.fidcard"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="72" style="vertical-align: middle;"></a>
+</p>
 
 ## About
 
