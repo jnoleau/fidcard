@@ -16,13 +16,17 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import {
+import RNAnimated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   runOnJS,
   LinearTransition,
   Easing,
+  useAnimatedRef,
+  useScrollViewOffset,
+  useFrameCallback,
+  scrollTo,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { SortableCard } from "../components/SortableCard";
@@ -97,7 +101,6 @@ function CardFace({
 }
 
 export default function Index() {
-
   const { cards, setCards } = useCardStore();
   const router = useRouter();
   const { t } = useTranslation();
@@ -118,6 +121,17 @@ export default function Index() {
   const dragCorrectionY = useSharedValue(0);
   const dragScale = useSharedValue(1);
   const cardsCount = useSharedValue(localCards.length);
+
+  const scrollRef =
+    useAnimatedRef<React.ComponentRef<typeof RNAnimated.ScrollView>>();
+  const scrollY = useScrollViewOffset(scrollRef);
+  const scrollAtDragStart = useSharedValue(0);
+  const viewportTop = useSharedValue(0);
+  const viewportHeight = useSharedValue(0);
+  const contentHeight = useSharedValue(0);
+  const pointerAbsoluteY = useSharedValue(0);
+  const lastTranslationX = useSharedValue(0);
+  const lastTranslationY = useSharedValue(0);
 
   useEffect(() => {
     cardsCount.value = localCards.length;
@@ -216,14 +230,24 @@ export default function Index() {
       dragCorrectionX.value = 0;
       dragCorrectionY.value = 0;
       dragScale.value = withSpring(1.05);
+      scrollAtDragStart.value = scrollY.value;
+      pointerAbsoluteY.value = event.absoluteY;
+      lastTranslationX.value = 0;
+      lastTranslationY.value = 0;
       runOnJS(triggerHaptic)();
       runOnJS(startDragAtIndex)(touchedIndex);
     })
     .onUpdate((event) => {
       if (dragSlotIndex.value < 0) return;
 
+      pointerAbsoluteY.value = event.absoluteY;
+      lastTranslationX.value = event.translationX;
+      lastTranslationY.value = event.translationY;
+
+      const scrollDelta = scrollY.value - scrollAtDragStart.value;
       dragTranslateX.value = event.translationX + dragCorrectionX.value;
-      dragTranslateY.value = event.translationY + dragCorrectionY.value;
+      dragTranslateY.value =
+        event.translationY + dragCorrectionY.value + scrollDelta;
 
       const currentPosition = getPosition(dragSlotIndex.value);
       const targetIndex = getIndexFromPoint(
@@ -237,7 +261,8 @@ export default function Index() {
         dragCorrectionX.value += currentPosition.x - nextPosition.x;
         dragCorrectionY.value += currentPosition.y - nextPosition.y;
         dragTranslateX.value = event.translationX + dragCorrectionX.value;
-        dragTranslateY.value = event.translationY + dragCorrectionY.value;
+        dragTranslateY.value =
+          event.translationY + dragCorrectionY.value + scrollDelta;
 
         const fromIndex = dragSlotIndex.value;
         dragSlotIndex.value = targetIndex;
@@ -254,6 +279,55 @@ export default function Index() {
       runOnJS(triggerHaptic)();
       runOnJS(finishDrag)();
     });
+
+  useFrameCallback(() => {
+    if (dragSlotIndex.value < 0) return;
+
+    const EDGE = 80;
+    const MAX_SPEED = 12;
+    const py = pointerAbsoluteY.value;
+    const top = viewportTop.value;
+    const bottom = top + viewportHeight.value;
+
+    let delta = 0;
+    if (py < top + EDGE) {
+      delta = -MAX_SPEED * Math.min(1, (top + EDGE - py) / EDGE);
+    } else if (py > bottom - EDGE) {
+      delta = MAX_SPEED * Math.min(1, (py - (bottom - EDGE)) / EDGE);
+    }
+    if (delta === 0) return;
+
+    const maxScroll = Math.max(0, contentHeight.value - viewportHeight.value);
+    const next = Math.max(0, Math.min(maxScroll, scrollY.value + delta));
+    if (Math.abs(next - scrollY.value) < 0.5) return;
+
+    scrollTo(scrollRef, 0, next, false);
+
+    const scrollDelta = next - scrollAtDragStart.value;
+    dragTranslateX.value = lastTranslationX.value + dragCorrectionX.value;
+    dragTranslateY.value =
+      lastTranslationY.value + dragCorrectionY.value + scrollDelta;
+
+    const currentPosition = getPosition(dragSlotIndex.value);
+    const targetIndex = getIndexFromPoint(
+      currentPosition.x + CARD_WIDTH / 2 + dragTranslateX.value,
+      currentPosition.y + ROW_HEIGHT / 2 + dragTranslateY.value,
+      cardsCount.value - 1,
+    );
+
+    if (targetIndex !== dragSlotIndex.value) {
+      const nextPosition = getPosition(targetIndex);
+      dragCorrectionX.value += currentPosition.x - nextPosition.x;
+      dragCorrectionY.value += currentPosition.y - nextPosition.y;
+      dragTranslateX.value = lastTranslationX.value + dragCorrectionX.value;
+      dragTranslateY.value =
+        lastTranslationY.value + dragCorrectionY.value + scrollDelta;
+
+      const fromIndex = dragSlotIndex.value;
+      dragSlotIndex.value = targetIndex;
+      runOnJS(handleReorder)(fromIndex, targetIndex);
+    }
+  });
 
   if (!isEditing) {
     pan.activateAfterLongPress(LONG_PRESS_DURATION);
@@ -280,7 +354,10 @@ export default function Index() {
   return (
     <View className="flex-1 bg-background">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <View className="flex-row items-center justify-between mb-6 pt-6" style={{ paddingHorizontal: PADDING }}>
+      <View
+        className="flex-row items-center justify-between mb-6 pt-6"
+        style={{ paddingHorizontal: PADDING }}
+      >
         <View className="flex-row items-center">
           <Ionicons name="card" size={32} color={foreground} />
           <Text className="text-3xl font-bold ml-3 text-foreground">
@@ -306,10 +383,23 @@ export default function Index() {
         )}
       </View>
 
-      <Animated.ScrollView
-        contentContainerClassName="flex-grow pb-24 px-4 pt-4"
+      <RNAnimated.ScrollView
+        ref={scrollRef}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingTop: 16,
+          paddingBottom: 96,
+          paddingHorizontal: 16,
+        }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={!isEditing}
+        onLayout={(e) => {
+          viewportTop.value = e.nativeEvent.layout.y;
+          viewportHeight.value = e.nativeEvent.layout.height;
+        }}
+        onContentSizeChange={(_w, h) => {
+          contentHeight.value = h;
+        }}
       >
         <Pressable
           className="flex-1"
@@ -390,7 +480,7 @@ export default function Index() {
               {activeCard && (
                 <Animated.View
                   pointerEvents="none"
-                  className="absolute z-[9999]"
+                  className="absolute z-9999"
                   style={[{ width: CARD_WIDTH }, overlayStyle]}
                 >
                   <CardFace card={activeCard} onPress={() => {}} disabled />
@@ -399,7 +489,7 @@ export default function Index() {
             </View>
           </GestureDetector>
         </Pressable>
-      </Animated.ScrollView>
+      </RNAnimated.ScrollView>
     </View>
   );
 }
